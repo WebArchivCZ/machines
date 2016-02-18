@@ -68,6 +68,16 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
+  
+  config.ssh.insert_key = false
+  
+  # Customize VM
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
+  end
+
+  config.vm.hostname = "seeder"
+  config.vm.network :private_network, ip: "192.168.60.20" 
 
   # Provisioning with Ansible
   config.vm.provision "ansible" do |ansible|
