@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "ovf-test"
+  # config.vm.box = "ovf-test"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -69,15 +69,28 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
   
-  config.ssh.insert_key = false
-  
   # Customize VM
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "2048"]
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.hostname = "seeder"
-  config.vm.network :private_network, ip: "192.168.60.20" 
+  config.vm.box = "bento/centos-7.2"
+  config.ssh.insert_key = true
+
+  config.vm.define "seeder" do |seeder|
+    seeder.vm.hostname = "seeder"
+    seeder.vm.network :private_network, ip: "192.168.60.20"
+  end
+
+  config.vm.define "db" do |db|
+    db.vm.hostname = "db"
+    db.vm.network :private_network, ip: "192.168.60.21"
+  end
+
+  config.vm.define "sentry" do |sentry|
+    sentry.vm.hostname = "sentry"
+    sentry.vm.network :private_network, ip: "192.168.60.22"
+  end
 
   # Provisioning with Ansible
   config.vm.provision "ansible" do |ansible|
