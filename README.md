@@ -3,7 +3,7 @@
 This is repository for Code of Web archiving infrastructure. We will build all machines from this repository. These machines will be used for developement > testing > production.
 
 ### TODO: 
-make public variant developers out of NL CR.
+make version without credential for developers out of NL CR.
 
 ## Installation
 
