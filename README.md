@@ -22,10 +22,12 @@ I do not know
 ## Usage
 
 ### Running WA infrastructure on your notebook
+```
 git clone https://github.com/WebArchivCZ/machines.git  
-cd project_dir  
+cd machines/project_dir  
 export VAULT_PASSWORD=Secret_password_who_is_shared_among_NLCR_admins_and_like_only
 vagrant up
+```
 
 ## Tips
 
