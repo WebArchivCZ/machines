@@ -1,0 +1,37 @@
+  - name: EPEL repository is installed
+    yum: name=epel-release state=installed
+
+  - name: Pip is installed
+    yum: name=python-pip state=installed
+
+  - name: Virtualenv is installed
+    yum: name=python-virtualenv state=installed
+
+  - name: Seeder | upgrade pip to latest version
+    pip: name="pip" virtualenv="/opt/virtualenv/seeder" state="latest"
+
+# I have DNS problems at home, so i commenting this for now
+#  - name: Seeder | clone repo
+#    git: repo="https://github.com/WebArchivCZ/Seeder.git"
+#         dest="/opt/Seeder"
+
+  - name: Seeder | psycopg2 requires postgresql-devel
+    yum: name="postgresql-devel" state="installed"
+  
+  - name: Seeder | psycopg2 requires mysql-devel
+    yum: name="mysql-devel" state="installed"
+
+  - name: Seeder | Pillow requires libjpeg-turbo-devel
+    yum: name="libjpeg-turbo-devel" state="installed"
+  
+  - name: Seeder | Pillow requires zlib-devel
+    yum: name="zlib-devel" state="installed"
+
+  - name: Seeder | Pillow requires python-devel
+    yum: name="python-devel" state="installed"
+  
+  - name: Seeder | Pillow requires gcc
+    yum: name="gcc" state="installed"
+
+  - name: Seeder | pip fulfils requirements.txt up to latest available version
+    pip: requirements="/opt/Seeder/requirements.txt" virtualenv="/opt/virtualenv/seeder" state="latest"

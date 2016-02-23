@@ -1,0 +1,23 @@
+---
+- hosts: all
+  tasks:
+
+  - include: tasks/init.yml
+  - include: tasks/admins.yml
+
+- hosts: db
+  tasks:
+
+   - include: tasks/mysql.yml
+
+- hosts: sentry
+  tasks:
+
+  - include: tasks/docker.yml
+  - include: tasks/postgresql.yml
+
+- hosts: seeder
+  tasks:
+
+  - include: tasks/seeder.yml
+  - include: tasks/docker.yml
