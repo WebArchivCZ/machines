@@ -37,6 +37,15 @@ export VAULT_PASSWORD="Secret_password_is_shared_among_NLCR_admins_and_other_goo
 vagrant up
 ```
 
+#### Provision machines after playbook updates
+```
+vagrant provision
+```
+
+#### Destroy enviroment
+```
+vagrant destroy
+```
 ### Tips
 
 #### shared dir is not project dir
