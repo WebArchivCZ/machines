@@ -1,0 +1,9 @@
+nette:
+	database:
+		dsn: 'mysql:host=localhost;dbname=wadmin'
+		user: root
+
+parameters:
+	productionMode: FALSE
+	sendEmails: FALSE
+	makeScreenshots: FALSE

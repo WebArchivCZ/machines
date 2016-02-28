@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+
+  - include: tasks/init.yml
+  - include: tasks/admins.yml
+
+- hosts: www
+  tasks:
+
+  - include: tasks/apache.yml
+  - include: tasks/mysql.yml
+  - include: tasks/www.yml

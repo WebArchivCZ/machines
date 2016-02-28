@@ -1,0 +1,5 @@
+  - name: Apache is installed
+    yum: name="httpd" state="installed"
+
+  - name: Apache is running
+    service: name="httpd" state="started" enabled="yes"
