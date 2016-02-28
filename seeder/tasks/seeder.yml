@@ -10,10 +10,9 @@
   - name: Seeder | upgrade pip to latest version
     pip: name="pip" virtualenv="/opt/virtualenv/seeder" state="latest"
 
-# I have DNS problems at home, so i commenting this for now
-#  - name: Seeder | clone repo
-#    git: repo="https://github.com/WebArchivCZ/Seeder.git"
-#         dest="/opt/Seeder"
+  - name: Seeder | clone repo
+    git: repo="https://github.com/WebArchivCZ/Seeder.git"
+         dest="/opt/Seeder"
 
   - name: Seeder | psycopg2 requires postgresql-devel
     yum: name="postgresql-devel" state="installed"
