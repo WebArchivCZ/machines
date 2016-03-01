@@ -1,23 +1,30 @@
-  - name: Set admin group
-    group: name=admin state=present
+  - name: Create group | admin
+    group: name="admin" state="present"
 
-  - name: Set user for Rudolf Kreibich
-    user: name=rudolf group=admin groups=wheel createhome=yes comment='Rudolf Kreibich' password="{{ item }}"
+  - name: Create user | Rudolf Kreibich
+    user: name="rudolf" group="admin" groups="wheel" createhome="yes" comment="Rudolf Kreibich" password="{{ item }}"
     with_file:
     - ../shared/encrypted/rudolf
 
-  - name: Set public key for Rudolf Kreibich
-    authorized_key: user=rudolf key="{{ item }}"
+  - name: Set public key for | Rudolf Kreibich
+    authorized_key: user="rudolf" key="{{ item }}"
     with_file:
     - ../shared/public_keys/rudolf
 
-  - name: Set user Bystroushaak
-    user: name=bystroushaak group=admin groups=wheel createhome=yes comment='J.S.'
+  - name: Create user | Bystroushaak
+    user: name="bystroushaak" group="admin" groups="wheel" createhome="yes" comment="J.S."
 
-  - name: Set public key for Bystroushaak
-    authorized_key: user=bystroushaak key="{{ item }}"
+  - name: Set public key for | Bystroushaak
+    authorized_key: user="bystroushaak" key="{{ item }}"
     with_file:
     - ../shared/public_keys/bystroushaak
 
-  - name: Set user for Jaroslav Kvasnica
-    user: name=jara group=admin groups=wheel createhome=yes comment='Jaroslav Kvasnica'
+  - name: Create user | Jaroslav Kvasnica
+    user: name="jarda" group="admin" groups="wheel" createhome="yes" comment="Jaroslav Kvasnica" password="{{ item }}"
+    with_file:
+    - ../shared/encrypted/jarda
+
+  - name: Set public key for | Jaroslav Kvasnica
+    authorized_key: user="jarda" key="{{ item }}"
+    with_file:
+    - ../shared/public_keys/jarda
