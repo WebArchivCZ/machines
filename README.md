@@ -17,7 +17,12 @@ Automate admin passwords hashes into vault encrypted shared/encrypted/admin_name
 
 #### If you are OSX consumer
 
-brew install vagrant ansible
+with homebrew as package manager: http://brew.sh
+
+```
+brew cask install vagrant virtualbox
+brew install ansible
+```
 
 #### If you are Linux consumer
 
