@@ -1,0 +1,7 @@
+[resolver]
+# IP ansible_ssh_private_key_file=PATH
+192.168.100.10
+
+[resolver:vars]
+ansible_ssh_user=vagrant
+
