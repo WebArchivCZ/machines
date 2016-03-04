@@ -6,3 +6,4 @@
   - include: tasks/admins.yml
   - include: tasks/postgresql.yml
   - include: tasks/docker.yml
+  - include: tasks/resolver.yml

@@ -1,0 +1,5 @@
+  - name: resolver | configuration directory is created
+    file: path="/etc/resolver/" state="directory" owner="docker" group="docker"
+
+  - name: resolver | AllowOveride All in /var/www/html
+    copy: src="templates/webarchiv_cz.conf" dest="/etc/httpd/conf.d/"
