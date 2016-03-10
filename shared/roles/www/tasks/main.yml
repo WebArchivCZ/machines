@@ -8,7 +8,7 @@
   - name: WWW | temp directory is created
     file: path="/var/www/html/temp" state="directory" owner="apache" group="apache"
 
-  - name: WWWW | configuratiom for WWW
+  - name: WWW | configuratiom for WWW
     copy: src="templates/config.product.neon" dest="/var/www/html/app/config/config.product.neon"
 
   - name: WWW | AllowOveride All in /var/www/html
