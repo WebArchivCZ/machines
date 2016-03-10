@@ -1,5 +1,0 @@
-  - name: Docker is installed
-    yum: name=docker state=installed
-  
-  - name: Docker is running
-    service: name=docker state=started enabled=yes

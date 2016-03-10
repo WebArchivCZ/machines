@@ -1,0 +1,8 @@
+- name: wadmin DB is created
+  mysql_db: name="wadmin" state="present"
+
+- name: wadmin DB | copy wadmin dump to server
+  copy: src="sql/wadmin-redacted.sql.gz" dest="/tmp"
+
+- name: wadmin DB | import data from sql dump
+  mysql_db: name="wadmin" state="import" target="/tmp/wadmin-redacted.sql.gz"

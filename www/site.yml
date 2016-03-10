@@ -1,13 +1,11 @@
 ---
 - hosts: all
-  tasks:
-
-  - include: tasks/init.yml
-  - include: tasks/admins.yml
+  roles:
+  - common
 
 - hosts: www
-  tasks:
-
-  - include: tasks/apache.yml
-  - include: tasks/mysql.yml
-  - include: tasks/www.yml
+  roles:
+  - apache
+  - mysql
+  - mysql-wadmin
+  - www

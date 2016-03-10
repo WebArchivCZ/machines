@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  tasks:
+  roles:
+  - common
 
-  - include: tasks/init.yml
-  - include: tasks/admins.yml

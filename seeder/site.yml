@@ -1,23 +1,18 @@
 ---
 - hosts: all
-  tasks:
-
-  - include: tasks/init.yml
-  - include: tasks/admins.yml
+  roles:
+  - common
 
 - hosts: db
-  tasks:
-
-   - include: tasks/mysql.yml
+  roles:
+  - mysql
 
 - hosts: sentry
-  tasks:
-
-  - include: tasks/docker.yml
-  - include: tasks/postgresql.yml
+  roles:
+  - docker
+  - postgresql
 
 - hosts: seeder
-  tasks:
-
-  - include: tasks/seeder.yml
-  - include: tasks/docker.yml
+  roles:
+  - docker
+  - postgresql
