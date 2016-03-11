@@ -1,2 +1,0 @@
-  - name: PostgreSQL is installed
-    yum: name=postgresql state=installed

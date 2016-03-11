@@ -1,2 +1,0 @@
-  - name: Maria DB is installed
-    yum: name=mariadb state=installed
