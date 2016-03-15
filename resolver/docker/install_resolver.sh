@@ -3,8 +3,7 @@
 # instalace resolveru
 yum -y install unzip
 
-TOMCAT_HOME=/usr/share/tomcat
-chmod 777 $TOMCAT_HOME/webapps
+chmod 777 /usr/share/tomcat/webapps
 
 su postgres
 mkdir /tmp/czidlo
@@ -14,9 +13,9 @@ wget https://github.com/NLCR/CZIDLO/releases/download/v4.3.alpha/CZIDLO_4.3.alph
 unzip CZIDLO_4.3.alpha-installation.zip.zip
 
 psql -a -f initDatabase_4.3.alpha.sql
-cp *.war $TOMCAT_HOME/webapps
+cp *.war /usr/share/tomcat/webapps
 
-cat > $TOMCAT_HOME/conf/context.xml <<EOF
+cat > /usr/share/tomcat/conf/context.xml <<EOF
 <Context antiJARLocking="true" path="/api">
 <Resource auth="Container"
  driverClassName="org.postgresql.Driver"
@@ -30,3 +29,4 @@ cat > $TOMCAT_HOME/conf/context.xml <<EOF
 </Context>
 EOF
 
+systemctl restart tomcat
