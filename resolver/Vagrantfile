@@ -96,6 +96,6 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site.yml"
     # Run commands as root.
-    ansible.sudo = true
+    # ansible.sudo = true
   end
 end
