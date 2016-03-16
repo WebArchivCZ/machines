@@ -1,0 +1,4 @@
+czidlo_log: "/var/log/tomcat/czidlo-admin.log"
+postgres_user: "postgres"
+postgres_pass:
+postgres_db: "resolver"

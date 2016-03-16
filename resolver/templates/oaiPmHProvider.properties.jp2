@@ -1,0 +1,81 @@
+# Copyright (C) 2013-2015 Martin \u0158eh\u00e1nek
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+##################################################
+#------------------------------------------------#
+#- CONFIGURATION OF MODULE OAI OAI-PMH-PROVIDER -#
+#------------------------------------------------#
+##################################################
+
+
+#################################################
+# global configuration used by multiple modules #
+#################################################
+
+#if this is set to true the application will not allow imports and other data updates
+#@mandatory
+czidlo.readOnly=false
+
+#whether running in development mode. default value is false
+#@mandatory
+czidlo.develMode=false
+
+#two-letter language code in URN:NBN schema according to ISO 3166, e. g. "cz"
+#@mandatory
+czidlo.languageCode=cz
+
+#name of the administrator
+#@optional
+czidlo.admin.name=Rudolf Kreibich
+
+#email of the administrator
+#@optional
+czidlo.admin.email=Rudolf.Kreibich@nkp.cz
+
+#where logs of all apps ares stored. These logs are available to admin-users through web interface
+#@mandatory
+czidlo.admin.logFile="{{ czidlo_log }}"
+
+#URL to response.xml that can be used to validate API and OAI-PMH provider responses
+czidlo.api.response-xsd=http://resolver.nkp.cz/api/v3/response.xsd
+
+
+########################################
+# configuration of module oai provider #
+########################################
+
+#name of repository  (will be present in response of Identify operation)
+provider.repositoryName=URN:NBN Resolver for Czech republic (language code \"cz\")
+
+#oai provider base url (will be present in response of Identify operation)
+provider.baseUrl=http://localhost:8080/oaiPmhProvider/provider
+
+#url of web interface of oai provider (will be present in response of Identify operation)
+provider.webUrl=http://localhost:8080/oaiPmhProvider/web
+
+#earliest datestamp (will be present in response of Identify operation)
+provider.earliestDatestamp=2010-10-06T00:00:00Z
+
+#maximal number of records returned by operation ListIdentifiers
+#if result is bigger, resumption token is returned
+provider.ListIdentifiers.maxSize=100
+
+#maximal number of records returned by operation ListRecords
+#if result is bigger, resumption token is returned
+provider.ListRecords.maxSize=20
+
+#number of minutes after which the ListIdentifier or ListRecord request is dropped
+#if not refreshed by following request with resumptionToken
+provider.ListRequests.minutesValid=3

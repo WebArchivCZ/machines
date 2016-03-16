@@ -1,0 +1,67 @@
+# Copyright (C) 2013-2015 Martin \u0158eh\u00e1nek
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#################################
+#-------------------------------#
+#- CONFIGURATION OF MODULE API -#
+#-------------------------------#
+#################################
+
+
+#################################################
+# global configuration used by multiple modules #
+#################################################
+
+#if this is set to true the application will not allow imports and other data updates
+#@mandatory
+czidlo.readOnly=false
+
+#whether running in development mode. default value is false
+#@mandatory
+czidlo.develMode=false
+
+#two-letter language code in URN:NBN schema according to ISO 3166, e. g. "cz"
+#@mandatory
+czidlo.languageCode=cz
+
+#name of the administrator
+#@optional
+czidlo.admin.name=Rudolf Kreibich
+
+#email of the administrator
+#@optional
+czidlo.admin.email=Rudolf.Kreibich@nkp.cz
+
+#where logs of all apps ares stored. These logs are available to admin-users through web interface
+#@mandatory
+czidlo.admin.logFile="{{ czidlo_log }}"
+
+#URL to response.xml that can be used to validate API and OAI-PMH provider responses
+czidlo.api.response-xsd=http://resolver.nkp.cz/api/v3/response.xsd
+
+
+###############################
+# configuration of module api #
+###############################
+
+#maximal number of prined urn:nbn records for operation GET /v3/registrars/{REGISTRAR_CODE}/urnNbnReservations
+#if number of records is higher than this only the number itself is printed
+api.getReseravations.maxReservedToPrint=100
+
+#default number of records returned by operation POST /v3/registrars/{REGISTRAR_CODE}/urnNbnReservations
+api.reservation.defaultSize=10
+
+#maximal number of records returned by operation POST /v3/registrars/{REGISTRAR_CODE}/urnNbnReservations
+api.reservation.maxSize=100
