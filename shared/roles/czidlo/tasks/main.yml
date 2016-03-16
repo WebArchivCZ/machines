@@ -1,4 +1,7 @@
 ---
+  - include: "../shared/roles/postgresql/tasks/main.yml"
+  - include: "../shared/roles/tomcat/tasks/main.yml"
+
   - name: Czidlo | /opt/czidlo exists
     file: path="/opt/czidlo" state="directory"
 
@@ -11,9 +14,12 @@
 
   - name: Czidlo | Deploy API into Tomcat
     command: cp /opt/czidlo/api-4.3.alpha.war /var/lib/tomcat/webapps/api.war
+             creates="/var/lib/tomcat/webapps/api.war"
 
   - name: Czidlo | Deploy WEB into Tomcat
     command: cp /opt/czidlo/web-4.3.alpha.war /var/lib/tomcat/webapps/web.war
+             creates="/var/lib/tomcat/webapps/web.war"
 
   - name: Czidlo | Deploy WEB into Tomcat
     command: cp /opt/czidlo/processDataServer-4.3.alpha.war /var/lib/tomcat/webapps/processDataServer.war
+             creates="/var/lib/tomcat/webapps/processDataServer.war"

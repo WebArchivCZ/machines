@@ -2,9 +2,7 @@
 - hosts: all
   roles:
   - common
-  - postgresql
   - docker
-  - tomcat
   - czidlo
 
   tasks:
