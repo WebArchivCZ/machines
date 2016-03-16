@@ -3,9 +3,3 @@
 
   # - name: resolver | AllowOveride All in /var/www/html
   #   copy: src="templates/webarchiv_cz.conf" dest="/etc/httpd/conf.d/"
-
-  - name: Docker is installed
-    yum: name=docker state=installed
-
-  - name: Docker is running
-    service: name=docker state=started enabled=yes
