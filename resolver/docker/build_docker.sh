@@ -14,7 +14,10 @@ wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2F
 wget http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.8/bin/apache-tomcat-7.0.8.tar.gz
 
 
+cp "$WORK_DIR/scripts/*" $TMP_DIR
 cp "$WORK_DIR/Dockerfile" .
+
+
 docker build --rm=true -t urn_nbn_resolver .
 
 cd $WORK_DIR

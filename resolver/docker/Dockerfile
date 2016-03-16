@@ -1,7 +1,7 @@
 FROM centos:centos7
 
 RUN yum -y update; yum clean all
-RUN yum -y install sudo epel-release wget tar; yum clean all
+RUN yum -y install sudo epel-release wget tar unzip; yum clean all
 
 
 
@@ -59,15 +59,21 @@ EXPOSE 8080
 
 
 # Copy and run installation scripts
-#ADD /install_tomcat.sh /usr/bin/install_tomcat.sh
-#ADD ./install_resolver.sh /usr/bin/install_resolver.sh
-#RUN chmod +x /usr/bin/install_tomcat.sh
-#RUN chmod +x /usr/bin/install_resolver.sh
-#RUN /usr/bin/install_tomcat.sh
-#RUN /usr/bin/install_resolver.sh
+ADD install_resolver_postgres.sh /usr/bin/install_resolver_postgres.sh
+ADD install_resolver2_root.sh /usr/bin/install_resolver2_root.sh
+RUN chmod +x /usr/bin/install_resolver_postgres.sh
+RUN chmod +x /usr/bin/install_resolver2_root.sh
+
 
 # Create directory with configuration, which will be mounted from the host
 #RUN mkdir /etc/resolver
+
+
+# Install resolver
+RUN sudo chmod 777 /usr/share/tomcat/webapps
+RUN sudo -u postgres install_resolver_postgres.sh
+RUN sudo install_resolver2_root.sh
+
 
 EXPOSE 80
 EXPOSE 443
