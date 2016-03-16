@@ -13,3 +13,6 @@ RUN /usr/bin/install_resolver.sh
 
 # Create directory with configuration, which will be mounted from the host
 RUN mkdir /etc/resolver
+
+EXPOSE 80
+EXPOSE 443
