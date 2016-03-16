@@ -1,2 +1,12 @@
-  - name: PostgreSQL is installed
-    yum: name=postgresql state=installed
+  - name: PostgreSQL | client is installed
+    yum: name="postgresql" state=installed
+
+  - name: PostgreSQL | Server is installed
+    yum: name="postgresql-server" state=installed
+
+  - name: PostgreSQL | Default Db is initalized
+    command: service postgresql initdb
+             creates="/var/lib/pgsql/data/postgresql.conf"
+  
+  - name: PostgreSQL | Server is running
+    service: name="postgresql" state="started" enabled="yes"
