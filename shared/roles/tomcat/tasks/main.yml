@@ -1,0 +1,5 @@
+  - name: Tomcat | is installed
+    yum: name="tomcat" state="installed"
+
+  - name: Tomcat | is running
+    service: name="tomcat" state="started" enabled="yes"

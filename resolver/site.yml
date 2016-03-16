@@ -4,6 +4,8 @@
   - common
   - postgresql
   - docker
+  - tomcat
+  - czidlo
 
   tasks:
 

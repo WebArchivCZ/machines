@@ -1,0 +1,19 @@
+---
+  - name: Czidlo | /opt/czidlo exists
+    file: path="/opt/czidlo" state="directory"
+
+  - name: Czidlo | Download and extract Czidlo 4.3.alpha
+    unarchive:
+      src="https://github.com/NLCR/CZIDLO/releases/download/v4.3.alpha/CZIDLO_4.3.alpha-installation.zip.zip"
+      dest="/opt/czidlo/"
+      copy="no"
+      creates="/opt/czidlo/README.TXT" # Very dirty way to make this task run only once
+
+  - name: Czidlo | Deploy API into Tomcat
+    command: cp /opt/czidlo/api-4.3.alpha.war /var/lib/tomcat/webapps/api.war
+
+  - name: Czidlo | Deploy WEB into Tomcat
+    command: cp /opt/czidlo/web-4.3.alpha.war /var/lib/tomcat/webapps/web.war
+
+  - name: Czidlo | Deploy WEB into Tomcat
+    command: cp /opt/czidlo/processDataServer-4.3.alpha.war /var/lib/tomcat/webapps/processDataServer.war

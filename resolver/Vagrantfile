@@ -90,6 +90,7 @@ Vagrant.configure(2) do |config|
   # Individual host configuration
   config.vm.define "resolver" do |host|
     host.vm.network :forwarded_port, guest: 80, host: 5180
+    host.vm.network :forwarded_port, guest: 8080, host: 58080
   end
 
   # Provisioning with Ansible
