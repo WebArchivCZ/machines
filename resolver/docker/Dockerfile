@@ -8,9 +8,9 @@ RUN yum -y install sudo epel-release wget tar; yum clean all
 # Install postgresql
 RUN yum -y install postgresql-server postgresql postgresql-contrib supervisor; yum clean all
 
-ADD postgres/postgresql-setup /usr/bin/postgresql-setup
-ADD postgres/supervisord.conf /etc/supervisord.conf
-ADD postgres/start_postgres.sh /start_postgres.sh
+ADD CentOS-Dockerfiles/postgres/centos7/postgresql-setup /usr/bin/postgresql-setup
+ADD CentOS-Dockerfiles/postgres/centos7/supervisord.conf /etc/supervisord.conf
+ADD CentOS-Dockerfiles/postgres/centos7/start_postgres.sh /start_postgres.sh
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
@@ -19,7 +19,7 @@ RUN chmod +x /start_postgres.sh
 
 RUN /usr/bin/postgresql-setup initdb
 
-ADD postgres/postgresql.conf /var/lib/pgsql/data/postgresql.conf
+ADD CentOS-Dockerfiles/postgres/centos7/postgresql.conf /var/lib/pgsql/data/postgresql.conf
 
 RUN chown -v postgres.postgres /var/lib/pgsql/data/postgresql.conf
 
