@@ -23,23 +23,27 @@
     become_user: "postgres"
     when: "resolver_created.changed"
 
+  - name: CZIDLO | Grant access to Resolver database
+    postgresql_user: db="resolver" name="resolver" password="password" priv="ALL"
+    become_user: "postgres"
+
   - name: CZIDLO | Configure Tomcat context.xml
     template:
-      src: templates/context.xml.j2
-      dest: /etc/tomcat/context.xml
-      owner: tomcat
-      group: tomcat
-      mode: 0664
+      src: "templates/context.xml.j2"
+      dest: "/etc/tomcat/context.xml"
+      owner: "tomcat"
+      group: "tomcat"
+      mode: "0664"
     notify:
     - restart tomcat
 
-  - name: CZIDLO | Deploy API into Tomcat
+  - name: CZIDLO | Deploy API WAR
     command: cp /opt/czidlo/api-4.3.alpha.war /var/lib/tomcat/webapps/api.war
              creates="/var/lib/tomcat/webapps/api/WEB-INF/classes/api.properties"
 
-  - name: CZIDLO | Configure API
+  - name: CZIDLO | Deploy API template
     template:
-      src: "templates/api.properties.jp2"
+      src: "templates/api.properties.j2"
       dest: "/var/lib/tomcat/webapps/api/WEB-INF/classes/api.properties"
       owner: "tomcat"
       group: "tomcat"
@@ -47,13 +51,13 @@
     notify:
     - restart tomcat
 
-  - name: CZIDLO | Deploy WEB into Tomcat
+  - name: CZIDLO | Deploy WEB WAR
     command: cp /opt/czidlo/web-4.3.alpha.war /var/lib/tomcat/webapps/web.war
-             creates="/var/lib/tomcat/webapps/WEB-INF/classes/web.properties"
+             creates="/var/lib/tomcat/webapps/web/WEB-INF/classes/web.properties"
 
-  - name: CZIDLO | Configure WEB
+  - name: CZIDLO | Deploy WEB template
     template:
-      src: "templates/api.properties.jp2"
+      src: "templates/web.properties.j2"
       dest: "/var/lib/tomcat/webapps/web/WEB-INF/classes/web.properties"
       owner: "tomcat"
       group: "tomcat"
@@ -61,11 +65,21 @@
     notify:
     - restart tomcat
 
-  - name: CZIDLO | Deploy processDataServer into Tomcat
+  - name: CZIDLO | Deploy WEB hibernate.cfg.xml
+    template:
+      src: "templates/hibernate.cfg.xml.j2"
+      dest: "/var/lib/tomcat/webapps/web/WEB-INF/classes/hibernate.cfg.xml"
+      owner: "tomcat"
+      group: "tomcat"
+      mode: "0644"
+    notify:
+    - restart tomcat
+
+  - name: CZIDLO | Deploy processDataServer WAR
     command: cp /opt/czidlo/processDataServer-4.3.alpha.war /var/lib/tomcat/webapps/processDataServer.war
              creates="/var/lib/tomcat/webapps/processDataServer/WEB-INF/classes/processDataServer.properties"
 
-  - name: CZIDLO | Configure ProcessDataServe
+  - name: CZIDLO | Deploy processDataServer template
     template:
       src: "templates/processDataServer.properties.j2"
       dest: "/var/lib/tomcat/webapps/processDataServer/WEB-INF/classes/processDataServer.properties"
@@ -75,13 +89,23 @@
     notify:
     - restart tomcat
 
-  - name: CZIDLO | Deploy OAI into Tomcat
+  - name: CZIDLO | Deploy processDataServer hibernate.cfg.xml
+    template:
+      src: "templates/hibernate.cfg.xml.j2"
+      dest: "/var/lib/tomcat/webapps/processDataServer/WEB-INF/classes/hibernate.cfg.xml"
+      owner: "tomcat"
+      group: "tomcat"
+      mode: "0644"
+    notify:
+    - restart tomcat
+
+  - name: CZIDLO | Deploy OAI WAR
     command: cp /opt/czidlo/oaiPmhProvider-4.3.alpha.war /var/lib/tomcat/webapps/oaiPmhProvider.war
              creates="/var/lib/tomcat/webapps/oaiPmhProvider/WEB-INF/classes/oaiPmhProvider.properties"
 
-  - name: CZIDLO | Configure API
+  - name: CZIDLO | Deploy OAI template
     template:
-      src: "templates/oaiPmhProvider.properties.jp2"
+      src: "templates/oaiPmhProvider.properties.j2"
       dest: "/var/lib/tomcat/webapps/oaiPmhProvider/WEB-INF/classes/oaiPmhProvider.properties"
       owner: "tomcat"
       group: "tomcat"

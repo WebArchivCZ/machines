@@ -26,7 +26,7 @@
 
 #where logs of all apps ares stored. These logs are available to admin-users through web interface
 #@mandatory
-czidlo.admin.logFile="{{ czidlo_log }}"
+czidlo.admin.logFile={{ czidlo_log }}
 
 
 ###############################################
@@ -35,15 +35,15 @@ czidlo.admin.logFile="{{ czidlo_log }}"
 
 #directory for storing data (logs, output) of jobs
 #@mandatory
-process.scheduler.jobsDataDir="{{ czidlo_log }}"
+process.scheduler.jobsDataDir={{ czidlo_log }}
 
 #process database configuration
 #@mandatory
 czidlo.db.host=localhost
 czidlo.db.port=5432
-czidlo.db.database="{{ postgres_db }}"
-czidlo.db.login=czidlo
-czidlo.db.password=czidlo
+czidlo.db.database={{ postgres_db }}
+czidlo.db.login={{ postgres_user }}
+czidlo.db.password={{ postgres_user }}
 
 #maximal number of jobs (owned by admin users) running simultaneously
 #@mandatory

@@ -46,7 +46,7 @@ czidlo.admin.email=Rudolf.Kreibich@nkp.cz
 
 #where logs of all apps ares stored. These logs are available to admin-users through web interface
 #@mandatory
-czidlo.admin.logFile="{{ czidlo_log }}"
+czidlo.admin.logFile={{ czidlo_log }}
 
 ###############################
 # configuration of module web #
@@ -71,15 +71,15 @@ web.aleph.base=CNB
 
 #directory for storing data (logs, output) of jobs
 #@mandatory
-process.scheduler.jobsDataDir=/path/to/process/dir
+process.scheduler.jobsDataDir="{{ czidlo_log }}"
 
 #primary database configuration used by processes
 #@mandatory
 czidlo.db.host=localhost
 czidlo.db.port=5432
 czidlo.db.database="{{ postgres_db }}"
-czidlo.db.login=czidlo
-czidlo.db.password=czidlo
+czidlo.db.login="{{ postgres_user }}"
+czidlo.db.password="{{ postgres_pass }}"
 
 #maximal number of jobs (owned by admin users) running simultaneously
 #@mandatory
