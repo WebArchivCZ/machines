@@ -11,6 +11,22 @@
   - name: WWW | configuratiom for WWW
     copy: src="templates/config.product.neon" dest="/var/www/html/app/config/config.product.neon"
 
+  - name: WWW | /var/www/html is writable for Apache | should not be used for production!
+    file: path="/var/www/html/" state="directory" owner="apache" group="apache" recurse="yes" mode="g+w"
+
+  - name: WWW | rudolf is now in apache group
+    user: name="rudolf" group="admin" groups="wheel,apache" createhome="yes" comment="Rudolf Kreibich" password="{{ item }}"
+    with_file:
+    - ../shared/encrypted/rudolf
+
+  - name: WWW | Bystroushaak is now in apache group
+    user: name="bystroushaak" group="admin" groups="wheel,apache" createhome="yes" comment="J.S."
+
+  - name: WWW | jarda is now in apache group
+    user: name="jarda" group="admin" groups="wheel,apache" createhome="yes" comment="Jaroslav Kvasnica" password="{{ item }}"
+    with_file:
+    - ../shared/encrypted/jarda
+
   - name: WWW | AllowOveride All in /var/www/html
     copy: src="templates/webarchiv_cz.conf" dest="/etc/httpd/conf.d/"
 
