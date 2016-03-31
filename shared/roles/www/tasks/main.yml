@@ -1,6 +1,7 @@
   - name: WWW | clone repo
     git: repo="https://github.com/webarchivCZ/WWW.git"
          dest="/var/www/html/"
+         force="yes"
 
   - name: WWW | log directory is created
     file: path="/var/www/html/log" state="directory" owner="apache" group="apache"
