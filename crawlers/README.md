@@ -11,7 +11,7 @@ ansible-playbook site.yml
 ```
 
 #### TODO: 
-a.) Make it a role
-b.) Make more tests
-c.) deal with variables in more clever way
+a.) Make it a role  
+b.) Make more tests  
+c.) deal with variables in more clever way  
 d.) prepare development/testing scenerio
