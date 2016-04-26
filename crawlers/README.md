@@ -3,7 +3,7 @@
 This is Playbook for crawlers in production. It does not provide testing VMs yet. Credentials for Heritrix are encrypted.
 
 #### Usage
-there should be seeds.txt in files/
+there should be seeds.txt in files/  
 there is template for crawler-beans.cxml templates/
 
 ```
