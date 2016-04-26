@@ -1,0 +1,18 @@
+[crawlers]
+crawler01 ansible_host=10.10.0.201 localName="0"
+crawler03 ansible_host=10.10.0.203 localName="1"
+crawler05 ansible_host=10.10.0.205 localName="2"
+crawler07 ansible_host=10.10.0.207 localName="3"
+crawler11 ansible_host=10.10.0.211 localName="4"
+crawler13 ansible_host=10.10.0.213 localName="5"
+crawler14 ansible_host=10.10.0.214 localName="6"
+crawler16 ansible_host=10.10.0.216 localName="7"
+crawler17 ansible_host=10.10.0.217 localName="8"
+crawler18 ansible_host=10.10.0.218 localName="9"
+
+
+[crawlers:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_become=true
+ansible_become_user=heritrix

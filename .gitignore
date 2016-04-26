@@ -1,2 +1,6 @@
 .vagrant/
 *.box
+seeds.txt
+negative-surts.txt
+surts.txt
+
