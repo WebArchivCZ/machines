@@ -621,6 +621,28 @@ Note that by sending these headers, the crawler may receive a '304-Not Modified'
 
 <!-- LOCAL REGEX ASSOCIATION-->
 
+<!-- RESPECT ROBOTS.TXT -->
+<bean id='respectRobots' class='org.archive.spring.Sheet'>
+ <property name='map'>
+  <map>
+   <entry key='metadata.robotsPolicyName' value='obey'/>
+  </map>
+ </property>
+</bean>
+
+<bean class='org.archive.crawler.spring.SurtPrefixesSheetAssociation'>
+ <property name='surtPrefixes'>
+  <list>
+   <value>+jdemenato.cz</value>
+  </list>
+ </property>
+ <property name='targetSheetNames'>
+  <list>
+   <value>respectRobots</value>
+  </list>
+ </property>
+</bean>
+
 <!-- LOCAL CALENDARS -->
  <bean id="rejectLocalCalendars" class="org.archive.modules.deciderules.MatchesListRegexDecideRule" autowire-candidate="false">
   <property name="decision" value="REJECT"/>
