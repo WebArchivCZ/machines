@@ -1,5 +1,18 @@
-  - name: Apache is installed
+  - name: Apache | is installed
     yum: name="httpd" state="installed"
 
-  - name: Apache is running
+  - name: Apache | is running
     service: name="httpd" state="started" enabled="yes"
+
+  - name: Apache |  Deploy VirtualHost file to /etc/httpd/conf.d/
+    template: src="templates/httpd-vhosts.conf.j2" dest="/etc/httpd/conf.d/httpd-vhosts.conf"
+    notify:
+      - restart Apache
+
+  - name: Apache | Admins smoke pipe of peace ( appended to apache group)
+    user: 
+      name: "{{ item.name }}"
+      groups: "apache"
+      append: "yes"
+    with_items: "{{admins}}"
+    
