@@ -1,0 +1,14 @@
+---
+admins:
+  - name: "rudolf"
+    comment: "Rudolf Kreibich"
+    groups: "wheel,users"
+    password: "$6$rounds=656000$wtu57di0O0yhiodC$oLS0p6AMeH1uosuavRMzEyLTY/DsCHbg7gnlmdWzWkfesEUBV3qrUbwTyFIldPeWcmHCn3aGrPc4Is4TbRqvr0"
+    public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAklZs1w9aCjt5kuJyhQRUgYcmLWb7Ig5celywld68xKGXEqXWA6xeUwsr7dWI4n0rmi8n//8vqXR9grhtPzk2oM0EbzdnHzJPgw15d2L3vnJTRrTR4incaiQPbcpAcWEdh89lgsuuIjTwXnwSlVL/703JxVxetoAlBYSo2QvB5uU= rudolf"
+
+  - name: jarda
+    comment: "Jaroslav Kvasnica"
+    groups: "wheel,users"
+    password: "$6$rounds=656000$5NMwjefR0j8O3pyP$fqiiET7PRrTk7VDqCTW8jC1GWI64AhUoRj5jqFZHSFuzeuLfRJuOX4rFXnboyTb1EjgBR/MRxJtx/Ev8BnVuF/"
+    public_keys: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtRIRTTj6KCGegYtmVtY+PuTP8Q6bD4LnrbjDwyt8evHWp+X0TtD8mmKstpOR6JNpEbxsg+sNgb8ZFLH7v+Zrt8C5xxyza3lCyWo0CVyLoietp6VVwhWG5verN65f9r7cedc4FrZY0BjlJyUtBmf41FLXHQmpW/7hTOO3XBpb2lX68UPxc2P9AyCoDbc4tab4vGxdU3CITPcCYxNKJzLoBtrMU3IcPY9tiWZ+qgu2+OBgmHg5wqdidXF3D1rRZDahFVQxnXRMFAmVJepvnoGll2SCjCYniOvWlKKpN0VbZZNiKvAwWordspO5w6CEDEs2ICNAZ2lFAy1aGEQ/nIHVX kvasnicaj@github.com"
+...
