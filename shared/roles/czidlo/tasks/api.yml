@@ -1,0 +1,33 @@
+---
+- name: API | Deploy WAR
+  shell: cp {{ czidlo_dir }}/api.war {{ tomcat_home }}/webapps/api.war
+  register: "czidlo_api_deployed"
+
+- name: API | Ensure WAR is deployed
+  wait_for: path="{{ tomcat_home }}/webapps/api/META-INF/context.xml"
+
+- name: API | Configure META-INF/context.xml
+  template:
+    src: "templates/context.xml.j2"
+    dest: "{{ tomcat_home }}/webapps/api/META-INF/context.xml"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0644"
+    backup: "yes"
+  vars:
+    czidlo_app: "api"
+  when: "czidlo_api_deployed.changed"
+  notify:
+  - restart tomcat
+
+- name: API | Configure WEB-INF/classes/api.properties
+  template:
+    src: "templates/api.properties.j2"
+    dest: "{{ tomcat_home }}/webapps/api/WEB-INF/classes/api.properties"
+    owner: "tomcat"
+    group: "tomcat"
+    mode: "0644"
+  when: "czidlo_api_deployed.changed"
+  notify:
+  - restart tomcat
+...

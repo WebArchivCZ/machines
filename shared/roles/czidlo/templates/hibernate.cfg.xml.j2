@@ -4,13 +4,14 @@
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
 		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/{{ postgres_db }}</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/{{ postgres_db_hibernate }}</property>
 		<property name="hibernate.connection.username">{{ postgres_user }}</property>
 		<property name="hibernate.connection.password">{{ postgres_pass }}</property>
-		<property name="hibernate.connection.pool_size">5</property>
-		<!--don't use hibernate.hbm2ddl.auto in production -->
+		<property name="hibernate.connection.pool_size">10</property>
+		<!--don't use hibernate.hbm2ddl.auto in production. Only once to intialize process database
+			first time one of application using the database (web or processDataManager) is deployed. -->
 		<!--<property name="hibernate.hbm2ddl.auto">create-drop</property> -->
-		<!--<property name="hibernate.hbm2ddl.auto">create</property> -->
+		{{ hibernate_init }}
 		<!-- Persistent classes -->
 		<mapping class="cz.nkp.urnnbn.processmanager.core.Process" />
 		<mapping class="cz.nkp.urnnbn.processmanager.core.XmlTransformation" />

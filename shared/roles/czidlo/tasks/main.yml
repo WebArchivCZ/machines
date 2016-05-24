@@ -1,114 +1,41 @@
 ---
-  - name: CZIDLO | /opt/czidlo exists
-    file: path="/opt/czidlo" state="directory"
+# REMOVE WARs FIRST
+- name: CZIDLO | Remove WARs from {{ tomcat_home }}/webapps/
+  file: path="{{ tomcat_home }}/webapps/{{item}}.war" state="absent"
+  with_items:
+  - processDataServer
+  - api
+  - web
+  - oaiPmhProvider
 
-  - name: CZIDLO | Download and extract CZIDLO 4.3.alpha
-    unarchive:
-      src="https://github.com/NLCR/CZIDLO/releases/download/v4.3.alpha/CZIDLO_4.3.alpha-installation.zip.zip"
-      dest="/opt/czidlo/"
-      copy="no"
-      creates="/opt/czidlo/README.TXT" # Very dirty way to make this task run only once
+- name: CZIDLO | Ensure WARs are undeployed
+  wait_for: path="{{ tomcat_home }}/webapps/{{item}}/META-INF/context.xml" state="absent"
+  with_items:
+  - processDataServer
+  - api
+  - web
+  - oaiPmhProvider
 
-  - name: CZIDLO | psycopg2 is intalled
-    yum: name="python-psycopg2" state="installed"
+# PREPARE DIR STRUCTURE FOR CZIDLO
+- name: CZIDLO | Ensure these dirs exists.
+  file: path="{{ item }}" state="directory" owner="{{ tomcat_user }}" group="{{ tomcat_group }}"
+  with_items: 
+  - "{{ czidlo_log_dir }}"
+  - "{{ czidlo_dir }}"
 
-  - name: CZIDLO | Database resolver is created
-    postgresql_db: name="resolver"
-    become: true
-    become_user: "postgres"
-    register: "resolver_created"
+- name: CZIDLO | Download and extract CZIDLO {{ czidlo_version }}
+  unarchive:
+    src="{{ czidlo_download_url }}"
+    dest="{{ czidlo_dir }}"
+    copy="no"
+    creates="{{ czidlo_dir }}/README.md"
+  register: "czidlo_downloaded"
 
-  - name: CZIDLO | init PostgreSQL database with CZIDLO script
-    command: psql -d resolver -a -f /opt/czidlo/initDatabase_4.3.alpha.sql # Not sure if -a is needed
-    become_user: "postgres"
-    when: "resolver_created.changed"
-
-  - name: CZIDLO | Grant access to Resolver database
-    postgresql_user: db="resolver" name="resolver" password="password" priv="ALL"
-    become_user: "postgres"
-
-  - name: CZIDLO | Configure Tomcat context.xml
-    template:
-      src: "templates/context.xml.j2"
-      dest: "/etc/tomcat/context.xml"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0664"
-    notify:
-    - restart tomcat
-
-  - name: CZIDLO | Deploy API WAR
-    command: cp /opt/czidlo/api-4.3.alpha.war /var/lib/tomcat/webapps/api.war
-             creates="/var/lib/tomcat/webapps/api/WEB-INF/classes/api.properties"
-
-  - name: CZIDLO | Deploy API template
-    template:
-      src: "templates/api.properties.j2"
-      dest: "/var/lib/tomcat/webapps/api/WEB-INF/classes/api.properties"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0644"
-    notify:
-    - restart tomcat
-
-  - name: CZIDLO | Deploy WEB WAR
-    command: cp /opt/czidlo/web-4.3.alpha.war /var/lib/tomcat/webapps/web.war
-             creates="/var/lib/tomcat/webapps/web/WEB-INF/classes/web.properties"
-
-  - name: CZIDLO | Deploy WEB template
-    template:
-      src: "templates/web.properties.j2"
-      dest: "/var/lib/tomcat/webapps/web/WEB-INF/classes/web.properties"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0644"
-    notify:
-    - restart tomcat
-
-  - name: CZIDLO | Deploy WEB hibernate.cfg.xml
-    template:
-      src: "templates/hibernate.cfg.xml.j2"
-      dest: "/var/lib/tomcat/webapps/web/WEB-INF/classes/hibernate.cfg.xml"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0644"
-    notify:
-    - restart tomcat
-
-  - name: CZIDLO | Deploy processDataServer WAR
-    command: cp /opt/czidlo/processDataServer-4.3.alpha.war /var/lib/tomcat/webapps/processDataServer.war
-             creates="/var/lib/tomcat/webapps/processDataServer/WEB-INF/classes/processDataServer.properties"
-
-  - name: CZIDLO | Deploy processDataServer template
-    template:
-      src: "templates/processDataServer.properties.j2"
-      dest: "/var/lib/tomcat/webapps/processDataServer/WEB-INF/classes/processDataServer.properties"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0644"
-    notify:
-    - restart tomcat
-
-  - name: CZIDLO | Deploy processDataServer hibernate.cfg.xml
-    template:
-      src: "templates/hibernate.cfg.xml.j2"
-      dest: "/var/lib/tomcat/webapps/processDataServer/WEB-INF/classes/hibernate.cfg.xml"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0644"
-    notify:
-    - restart tomcat
-
-  - name: CZIDLO | Deploy OAI WAR
-    command: cp /opt/czidlo/oaiPmhProvider-4.3.alpha.war /var/lib/tomcat/webapps/oaiPmhProvider.war
-             creates="/var/lib/tomcat/webapps/oaiPmhProvider/WEB-INF/classes/oaiPmhProvider.properties"
-
-  - name: CZIDLO | Deploy OAI template
-    template:
-      src: "templates/oaiPmhProvider.properties.j2"
-      dest: "/var/lib/tomcat/webapps/oaiPmhProvider/WEB-INF/classes/oaiPmhProvider.properties"
-      owner: "tomcat"
-      group: "tomcat"
-      mode: "0644"
-    notify:
-    - restart tomcat
+# Prepare database
+- include: database.yml
+# Deploy WARs and configure them
+- include: processDataServer.yml
+- include: api.yml
+- include: web.yml
+- include: oai.yml
+...

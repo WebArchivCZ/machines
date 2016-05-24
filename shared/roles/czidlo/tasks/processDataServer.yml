@@ -1,0 +1,34 @@
+---
+- name: PROCESS_DATA_SERVER | Deploy WAR
+  shell: cp {{ czidlo_dir }}/processDataServer.war {{ tomcat_home }}/webapps/processDataServer.war
+  register: "czidlo_process_deployed"
+
+- name: PROCESS_DATA_SERVER | Ensure WAR is deployed
+  wait_for: path="{{ tomcat_home }}/webapps/processDataServer/META-INF/context.xml"
+  when: "czidlo_process_deployed.changed"
+
+- name: PROCESS_DATA_SERVER | Deploy WEB-INF/classes/processDataServer.properties
+  template:
+    src: "templates/processDataServer.properties.j2"
+    dest: "{{ tomcat_home }}/webapps/processDataServer/WEB-INF/classes/processDataServer.properties"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0644"
+    backup: "yes"
+  when: "czidlo_process_deployed.changed"
+  notify:
+  - restart tomcat
+
+- name: PROCESS_DATA_SERVER | Deploy META-INF/context.xml
+  template:
+    src: "templates/context.xml.j2"
+    dest: "{{ tomcat_home }}/webapps/processDataServer/META-INF/context.xml"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0644"
+  vars:
+    czidlo_app: "processDataServer"
+  when: "czidlo_process_deployed.changed"
+  notify:
+  - restart tomcat
+...

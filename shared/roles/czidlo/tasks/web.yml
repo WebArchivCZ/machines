@@ -1,0 +1,73 @@
+---
+  - name: WEB | Deploy WAR
+    shell: cp {{ czidlo_dir }}/web.war {{ tomcat_home }}/webapps/web.war
+    register: "czidlo_web_deployed"
+
+  - name: WEB | Ensure WAR is deployed 
+    wait_for: path="{{ tomcat_home }}/webapps/web/META-INF/context.xml"
+
+  - name: WEB | Init hibernate database WEB-INF/classes/hibernate.cfg.xml
+    template:
+      src: "templates/hibernate.cfg.xml.j2"
+      dest: "{{ tomcat_home }}/webapps/web/WEB-INF/classes/hibernate.cfg.xml"
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      mode: "0644"
+    vars:
+      hibernate_init: "<property name=\"hibernate.hbm2ddl.auto\">create-drop</property>"
+    when: "czidlo_web_deployed.changed"
+    notify:
+    - restart tomcat
+
+  - name: WEB | Restart Tomcat to init hibernate
+    service: name="tomcat" state="restarted"
+
+  - name: WEB | Remove init property WEB-INF/classes/hibernate.cfg.xml
+    template:
+      src: "templates/hibernate.cfg.xml.j2"
+      dest: "{{ tomcat_home }}/webapps/web/WEB-INF/classes/hibernate.cfg.xml"
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      mode: "0644"
+    vars:
+      hibernate_init: ""
+    when: "czidlo_web_deployed.changed"
+    notify:
+    - restart tomcat
+
+  - name: WEB | Configure WEB-INF/classes/web.properties
+    template:
+      src: "templates/web.properties.j2"
+      dest: "{{ tomcat_home }}/webapps/web/WEB-INF/classes/web.properties"
+      owner: "tomcat"
+      group: "tomcat"
+      mode: "0644"
+      backup: "yes"
+    when: "czidlo_web_deployed.changed"
+    notify:
+    - restart tomcat
+
+#  - name: CZIDLO | Deploy WEB WEB-INF/jetty-web.xml
+#    template:
+#      src: "templates/jetty-web.xml.j2"
+#      dest: "{{ tomcat_home }}/webapps/web/WEB-INF/jetty-web.xml"
+#      owner: "{{ tomcat_user }}"
+#      group: "{{ tomcat_group }}"
+#      mode: "0644"
+#    when: "czidlo_web_deployed.changed"
+#    notify:
+#    - restart tomcat
+
+  - name: WEB | Configure META-INF/context.xml
+    template:
+      src: "templates/context.xml.j2"
+      dest: "{{ tomcat_home }}/webapps/web/META-INF/context.xml"
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      mode: "0644"
+    vars:
+      czidlo_app: "web"
+    when: "czidlo_web_deployed.changed"
+    notify:
+    - restart tomcat
+...

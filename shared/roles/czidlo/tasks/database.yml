@@ -1,0 +1,44 @@
+---
+- name: DATABASE | psycopg2 is intalled
+  yum: name="python-psycopg2" state="installed"
+
+- name: DATABASE | Create user {{ postgres_user }}
+  postgresql_user: name="{{ postgres_user }}" password="{{ postgres_pass }}" # priv="ALL"
+  become_user: "postgres"
+
+- name: DATABASE | Databases are created by {{ postgres_user }}.
+  postgresql_db: name="{{ item }}" owner="{{ postgres_user }}"
+  with_items:
+  - "{{ postgres_db }}"
+  - "{{ postgres_db_hibernate }}"
+  become: true
+  become_user: "postgres"
+  register: "resolver_created"
+
+- name: DATABASE | Grant ALL to {{ postgres_user }}
+  postgresql_privs: database="{{ item }}" roles="{{ postgres_user }}" type="database" priv="ALL"
+  with_items:
+  - "{{ postgres_db }}"
+  - "{{ postgres_db_hibernate }}"
+  become_user: "postgres"
+
+- name: DATABASE | Configuration deployed
+  template:
+    src: "templates/pg_hba.conf.j2"
+    dest: "/var/lib/pgsql/data/pg_hba.conf"
+    owner: "postgres"
+    group: "postgres"
+  register: "db_conf_updated"
+
+- name: DATABASE | Restart Postgres
+  service: name="postgresql" state="restarted"
+  when: "db_conf_updated.changed"
+
+- name: CZIDLO | init PostgreSQL database with CZIDLO script
+  shell: psql {{ postgres_db }} {{ postgres_user }} < {{ czidlo_dir }}/initDatabase_{{ czidlo_version }}.sql
+  become_user: "postgres"
+#  when: "czidlo_downloaded.changed"
+  tags: "init_db"
+  environment:
+    PGPASSWORD: "{{ postgres_pass }}"
+...

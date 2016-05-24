@@ -1,0 +1,33 @@
+---
+- name: OAI | Deploy WAR
+  shell: cp {{ czidlo_dir }}/oaiPmhProvider.war {{ tomcat_home }}/webapps/oaiPmhProvider.war
+  register: "czidlo_oai_deployed"
+
+- name: OAI | Ensure WAR is deployed
+  wait_for: path="{{ tomcat_home }}/webapps/oaiPmhProvider/META-INF/context.xml"
+
+- name: OAI | Configure META-INF/context.xml
+  template:
+    src: "templates/context.xml.j2"
+    dest: "{{ tomcat_home }}/webapps/oaiPmhProvider/META-INF/context.xml"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0644"
+  vars:
+    czidlo_app: "oai"
+  when: "czidlo_oai_deployed.changed"
+  notify:
+  - restart tomcat
+
+- name: OAI | Configure WEB-INF/classes/oaiPmhProvider.properties
+  template:
+    src: "templates/oaiPmhProvider.properties.j2"
+    dest: "{{ tomcat_home }}/webapps/oaiPmhProvider/WEB-INF/classes/oaiPmhProvider.properties"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: "0644"
+    backup: "yes"
+  when: "czidlo_oai_deployed.changed"
+  notify:
+  - restart tomcat
+...

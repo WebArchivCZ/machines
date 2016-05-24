@@ -1,0 +1,22 @@
+---
+  # APP RELATED STUFF
+    czidlo_version: "4.3"
+    czidlo_download_url: "https://github.com/NLCR/CZIDLO/releases/download/v4.3/CZIDLO_4.3.zip"
+    czidlo_root: "/opt/czidlo"
+    czidlo_log_dir: "{{ czidlo_root }}/resolver-data"
+    czidlo_log: "{{ czidlo_log_dir }}/admin.log"
+    czidlo_dir: "{{ czidlo_root }}/{{ czidlo_version }}"
+    czidlo_update_db_script: "updateDatabase_4.2.2_to_4.3.sql"
+    czidlo_app: "" # This one is defined per context.xml deploy task - usable values are: processDataServer, api, web, oaiPmhProvider
+
+ # TOMCAT RELATED STUFF
+    tomcat_user: "tomcat"
+    tomcat_group: "tomcat"
+    tomcat_home: "/usr/share/tomcat"
+
+ # POSTGRES RELATED STUFF
+    postgres_user: "resolver"
+    postgres_pass: "password"
+    postgres_db: "czidlo"
+    postgres_db_hibernate: "hibernate"
+...

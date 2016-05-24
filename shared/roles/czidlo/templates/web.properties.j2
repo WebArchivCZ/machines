@@ -64,6 +64,12 @@ web.aleph.url=http://aleph.nkp.cz
 #@optional (mandatory if web.aleph.showLinks=true)
 web.aleph.base=CNB
 
+#login page (can point to another CZIDLO installation)
+#@fromVersion 4.0
+web.login.page=spring_security_login
+
+#@optional
+#web.gaTrackingCode=UA-XXXXX-X
 
 ##########################################
 # configuration of module processManager #
@@ -71,15 +77,15 @@ web.aleph.base=CNB
 
 #directory for storing data (logs, output) of jobs
 #@mandatory
-process.scheduler.jobsDataDir="{{ czidlo_log }}"
+process.scheduler.jobsDataDir={{ czidlo_log_dir }}/processes
 
 #primary database configuration used by processes
 #@mandatory
 czidlo.db.host=localhost
 czidlo.db.port=5432
-czidlo.db.database="{{ postgres_db }}"
-czidlo.db.login="{{ postgres_user }}"
-czidlo.db.password="{{ postgres_pass }}"
+czidlo.db.database={{ postgres_db }}
+czidlo.db.login={{ postgres_user }}
+czidlo.db.password={{ postgres_pass }}
 
 #maximal number of jobs (owned by admin users) running simultaneously
 #@mandatory
@@ -100,7 +106,3 @@ oaiAdapter.digInstImportXsdUrl=http://resolver.nkp.cz/api/v3/digInstImport.xsd
 #czidlo api url for OAI-ADAPTER process
 #@manadatory
 oaiAdapter.czidlo_api.baseUrl=localhost:8080/api
-
-#login page (can point to another CZIDLO installation)
-#@fromVersion 4.0
-web.login.page=spring_security_login

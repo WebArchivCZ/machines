@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<Context antiJARLocking="true" path="/api">
- <Resource auth="Container"
-  driverClassName="org.postgresql.Driver"
-  maxActive="100" maxIdle="30" maxWait="200"
-  name="jdbc/postgres"
-  username="{{ postgres_user }}"
-  password="{{ postgres_pass }}"
-  type="javax.sql.DataSource"
-  url="jdbc:postgresql://localhost:5432/{{ postgres_db }}"
+<Context antiJARLocking="true" path="/{{ czidlo_app }}">
+	<Resource 
+		auth="Container"
+  		driverClassName="org.postgresql.Driver"
+  		maxActive="100" maxIdle="30" maxWait="200"
+  		name="jdbc/postgres"
+  		username="{{ postgres_user }}"
+  		password="{{ postgres_pass }}"
+  		type="javax.sql.DataSource"
+  		url="jdbc:postgresql://localhost:5432/{{ postgres_db }}"
   />
 </Context>

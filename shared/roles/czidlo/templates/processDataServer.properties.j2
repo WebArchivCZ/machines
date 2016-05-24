@@ -35,7 +35,7 @@ czidlo.admin.logFile={{ czidlo_log }}
 
 #directory for storing data (logs, output) of jobs
 #@mandatory
-process.scheduler.jobsDataDir={{ czidlo_log }}
+process.scheduler.jobsDataDir={{ czidlo_log_dir }}/processes
 
 #process database configuration
 #@mandatory
@@ -43,7 +43,7 @@ czidlo.db.host=localhost
 czidlo.db.port=5432
 czidlo.db.database={{ postgres_db }}
 czidlo.db.login={{ postgres_user }}
-czidlo.db.password={{ postgres_user }}
+czidlo.db.password={{ postgres_pass }}
 
 #maximal number of jobs (owned by admin users) running simultaneously
 #@mandatory
