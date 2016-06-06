@@ -1,0 +1,7 @@
+---
+- name: Pacakges | EPEL repository installed
+  yum: name="epel-release"
+
+- name: Packages | Nginx installed
+  yum: name="nginx"
+...
