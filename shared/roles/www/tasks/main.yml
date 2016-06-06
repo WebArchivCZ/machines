@@ -1,50 +1,34 @@
   - name: WWW | clone repo
     git: repo="https://github.com/webarchivCZ/WWW.git"
-         dest="/var/www/html/"
-         force="yes"
+         dest="{{ apache_www }}"
+         update="yes"
 
   - name: WWW | log directory is created
-    file: path="/var/www/html/log" state="directory" owner="apache" group="apache"
+    file: 
+      path: "{{ item }}" 
+      state: "directory" 
+      owner: "apache" 
+      group: "apache"
+      recurse: "yes"
+      mode: "g+w"
+    with_items:
+      -  "{{ apache_www }}/log"
+      -  "{{ apache_www }}/temp"
+      -  "{{ apache_www }}"
   
-  - name: WWW | temp directory is created
-    file: path="/var/www/html/temp" state="directory" owner="apache" group="apache"
-
   - name: WWW | configuratiom for WWW
-    copy: src="templates/config.product.neon" dest="/var/www/html/app/config/config.product.neon"
+    copy: 
+      src: "templates/config.product.neon" 
+      dest: "{{ apache_www }}/app/config/config.product.neon"
+      owner: "apache"
+      group: "apache"
 
-  - name: WWW | /var/www/html is writable for Apache | should not be used for production!
-    file: path="/var/www/html/" state="directory" owner="apache" group="apache" recurse="yes" mode="g+w"
-
-  - name: WWW | rudolf is now in apache group
-    user: name="rudolf" group="admin" groups="wheel,apache" createhome="yes" comment="Rudolf Kreibich" password="{{ item }}"
-    with_file:
-    - ../shared/encrypted/rudolf
-
-  - name: WWW | Bystroushaak is now in apache group
-    user: name="bystroushaak" group="admin" groups="wheel,apache" createhome="yes" comment="J.S."
-
-  - name: WWW | jarda is now in apache group
-    user: name="jarda" group="admin" groups="wheel,apache" createhome="yes" comment="Jaroslav Kvasnica" password="{{ item }}"
-    with_file:
-    - ../shared/encrypted/jarda
-
-  - name: WWW | AllowOveride All in /var/www/html
-    copy: src="templates/webarchiv_cz.conf" dest="/etc/httpd/conf.d/"
-
-  - name: WWW | PHP is installed
-    yum: name="php" state="installed"
-
-  - name: WWW | PHP PDO is installed
-    yum: name="php-pdo" state="installed"
-
-  - name: WWW | PHP MySQL is installed
-    yum: name="php-mysql" state="installed"
-  
-  - name: WWW | PHP Internationalization is installed
-    yum: name="php-intl" state="installed"
-
-  - name: WWW | PHP Multibyte String is installed
-    yum: name="php-mbstring" state="installed"
-
-  - name: WWW | Restart apache
-    service: name="httpd" state="restarted"
+  - name: WWW | PHP and modules are installed
+    yum: name="{{ item }}" state="installed"
+    with_items: 
+      - "php"
+      - "php-pdo"
+      - "php-mysql"
+      - "php-intl"
+      - "php-mbstring"
+    notify: restart apache

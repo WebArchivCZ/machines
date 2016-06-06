@@ -19,4 +19,7 @@
     postgres_pass: "password"
     postgres_db: "czidlo"
     postgres_db_hibernate: "hibernate"
+    postgres_dbs: 
+    - "{{ postgres_db }}"
+    - "{{ postgres_db_hibernate }}"
 ...

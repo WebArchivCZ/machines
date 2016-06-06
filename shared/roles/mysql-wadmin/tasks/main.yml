@@ -1,8 +1,17 @@
-- name: wadmin DB is created
-  mysql_db: name="wadmin" state="present"
+- name: "{{ wadmin_db }} exists"
+  mysql_db: name="{{ wadmin_db }}" state="present"
+  tags: wadmin
 
-- name: wadmin DB | copy wadmin dump to server
-  copy: src="sql/wadmin-redacted.sql.gz" dest="/tmp"
+- name: copy "{{ wadmin_sql }}" to /tmp
+  copy: src="files/{{ wadmin_sql }}" dest="/tmp"
+  tags: wadmin
+  register: wadmin_db_copied
 
-- name: wadmin DB | import data from sql dump
-  mysql_db: name="wadmin" state="import" target="/tmp/wadmin-redacted.sql.gz"
+- name: import "{{ wadmin_sql }}" to "{{ wadmin_db }}"
+  mysql_db: name="{{ wadmin_db }}" state="import" target="/tmp/{{ wadmin_sql }}"
+  when: wadmin_db_copied.changed
+  tags: wadmin
+
+- name: GRANT ALL ON "{{ wadmin_db }}" TO "{{ wadmin_db_user }}"
+  mysql_user: name="{{ wadmin_db_user }}" priv="{{ wadmin_db }}.*:ALL" password="{{ wadmin_db_pass }}"
+  tags: wadmin

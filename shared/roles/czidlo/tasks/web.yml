@@ -47,16 +47,16 @@
     notify:
     - restart tomcat
 
-#  - name: CZIDLO | Deploy WEB WEB-INF/jetty-web.xml
-#    template:
-#      src: "templates/jetty-web.xml.j2"
-#      dest: "{{ tomcat_home }}/webapps/web/WEB-INF/jetty-web.xml"
-#      owner: "{{ tomcat_user }}"
-#      group: "{{ tomcat_group }}"
-#      mode: "0644"
-#    when: "czidlo_web_deployed.changed"
-#    notify:
-#    - restart tomcat
+  - name: CZIDLO | Deploy WEB WEB-INF/jetty-web.xml
+    template:
+      src: "templates/jetty-web.xml.j2"
+      dest: "{{ tomcat_home }}/webapps/web/WEB-INF/jetty-web.xml"
+      owner: "{{ tomcat_user }}"
+      group: "{{ tomcat_group }}"
+      mode: "0644"
+    when: "czidlo_web_deployed.changed"
+    notify:
+    - restart tomcat
 
   - name: WEB | Configure META-INF/context.xml
     template:

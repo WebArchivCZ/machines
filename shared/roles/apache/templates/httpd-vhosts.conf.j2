@@ -24,9 +24,9 @@
     ServerAdmin {{ apache_contact }}
     DocumentRoot "{{ apache_www }}"
       <Directory {{ apache_www }}>
-        AllowOverride All   
-        Require all granted
-        Options Indexes FollowSymLinks MultiViews
+        {{ apache_dir_override }}
+	{{ apache_dir_require }}
+        {{ apache_dir_options }}
       </Directory>
 
     ServerName {{ apache_hostname }}

@@ -1,4 +1,7 @@
 ---
-apache_contact: root@localhost
-apache_www: /var/www/html
+apache_contact: "root@localhost"
+apache_www: "/var/www/html"
 apache_hostname: "{{ ansible_hostname }}"
+apache_dir_override: "AllowOverride All"
+apache_dir_require:  "Require all granted"
+apache_dir_options: "Options Indexes FollowSymLinks MultiViews"

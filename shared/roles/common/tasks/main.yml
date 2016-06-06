@@ -1,2 +1,32 @@
-- include: init.yml
-- include: admins.yml
+- name: Install beloved packages
+  yum: name="{{ item }}" state="installed"
+  with_items:
+    - "ntp"  # Time matters.
+    - "unzip" # Ansible enjoys unzip
+    - "vim" # Everybody loves vim!
+    - "git" # Heart of everything
+
+- name: NTP daemon is running
+  service: name=ntpd state=started enabled=yes
+
+- name: Set timezone to Europe/Prague | CEST
+  when: ansible_date_time.tz != 'CEST'
+  command: timedatectl set-timezone Europe/Prague
+  tags: tz
+
+- name: Create admin users
+  user:
+    name="{{ item.name }}"
+    groups="{{ item.groups}}"
+    createhome="yes"
+    comment="{{ item.comment }}"
+    password="{{ item.password }}"
+    append="yes"
+  with_items: "{{admins}}"
+  ignore_errors: "yes" # Workaround before proper conditional for outsiders
+
+
+- name: Add public keys to for admins
+  authorized_key: user="{{ item.name }}" key="{{ item.public_keys }}"
+  with_items: "{{admins}}"
+  ignore_errors: "yes" # Workaround before proper conditional for outsiders

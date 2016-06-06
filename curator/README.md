@@ -1,15 +1,36 @@
-# Seeder Enviroment for Webarchive curators
+# Apps for web archive curators
 
-####TODO: 
-a.) seeder into docker machine  
-b.) WA-KAT integration  
-c.) DB preparation  
-d.) external logging  
-e.) Sentry  
+## seeder 
 
-####This enviroment consists of: 
-*The Seeder*: https://github.com/WebArchivCZ/Seeder | Curation tool  
-*WA-KAT*: https://github.com/WebArchivCZ/WA-KAT | Assisted catalogization tool  
-*Sentry*: https://github.com/getsentry/sentry | Sentry server for our devs  
-*DB*: MySQL / MariaDB for now  
+### basic info
+repo: https://github.com/webarchivcz/seeder succeeds WAdmin (https://github.com/webarchivcz/wa-admin)
 
+### description
+seeeder helps to manage work with legal deposit
+
+### implementation description
+django + postgresql + elasticsearch + memcached + python 3
+/opt/virtualenv/seeder
+
+manage.py legacy\_sync migrates old WAadmin MySQL database to PostgreSQL.
+
+### todo
+Mails
+Make manage.py superuser idempotent
+Automatic passwords for superusers
+external logging
+*Sentry*: https://github.com/getsentry/sentry
+elasticsearch\_plugins is broken
+
+## wa-kat
+repo: https://github.com/webarchivcz/WA-KAT | Assisted catalogization tool
+
+### basic info
+
+### description
+
+### implementation
+python 2.7, zeo database
+
+### todo
+run behind nginx

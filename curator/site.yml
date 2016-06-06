@@ -2,17 +2,21 @@
 - hosts: all
   roles:
   - common
+  - mysql-wadmin
+  - wa-kat
+  - seeder
+  vars:
+    seeder_admins:
+    - name: rudolf
+      mail: rudolf.kreibich@nkp.cz
 
-- hosts: db
-  roles:
-  - mysql
+    - name: jarda
+      mail: jarda.kvasnica@nkp.cz
 
-- hosts: sentry
-  roles:
-  - docker
-  - postgresql
-
-- hosts: seeder
-  roles:
-  - docker
-  - postgresql
+    seeder_debug: False
+    wadmin_db_connected: True
+    wadmin_sql: wadmin.sql.gz
+  handlers:
+  - name: restart supervisord
+    service: name="supervisord" state="restarted"
+...

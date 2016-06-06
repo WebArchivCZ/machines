@@ -1,12 +1,43 @@
-  - name: Server and client are installed
-    yum: name="{{ item }}"
-    with_items:
-    - postgresql
-    - postgresql-server
+- name: Server and client are installed
+  yum: name="{{ item }}"
+  with_items:
+  - postgresql
+  - postgresql-server
+  - python-psycopg2
 
-  - name: Default Db is initalized
-    command: service postgresql initdb
-             creates="/var/lib/pgsql/data/postgresql.conf"
-  
-  - name: Server is running
-    service: name="postgresql" state="started" enabled="yes"
+- name: Default Db is initalized
+  shell: service postgresql initdb
+         creates="/var/lib/pgsql/data/postgresql.conf"
+
+- name: Server is running
+  service: name="postgresql" state="started" enabled="yes"
+
+- name: Create user {{ postgres_user }}
+  postgresql_user: name="{{ postgres_user }}" password="{{ postgres_pass }}" # priv="ALL"
+  become_user: "postgres"
+
+- name: Databases are created by {{ postgres_user }}.
+  postgresql_db: name="{{ item }}" owner="{{ postgres_user }}"
+  with_items:
+  - "{{ postgres_dbs }}"
+  become: true
+  become_user: "postgres"
+
+- name: Grant ALL to {{ postgres_user }}
+  postgresql_privs: database="{{ item }}" roles="{{ postgres_user }}" type="database" priv="ALL"
+  with_items:
+  - "{{ postgres_dbs }}"
+  become_user: "postgres"
+
+- name: Configuration deployed
+  template:
+    src: "templates/pg_hba.conf.j2"
+    dest: "/var/lib/pgsql/data/pg_hba.conf"
+    owner: "postgres"
+    group: "postgres"
+  notify: restart postgresql
+  register: postgresql_config
+
+- name: Restart postgresql server after configration change
+  service: name="postgresql" state="restarted"
+  when: postgresql_config.changed
