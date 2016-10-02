@@ -29,14 +29,25 @@
   - "{{ postgres_dbs }}"
   become_user: "postgres"
 
-- name: Configuration deployed
-  template:
-    src: "templates/pg_hba.conf.j2"
+- name: "{{ postgres_user }} is allowed to connect to db"
+  lineinfile:
     dest: "/var/lib/pgsql/data/pg_hba.conf"
-    owner: "postgres"
-    group: "postgres"
-  notify: restart postgresql
+    insertbefore: '^# "local"'
+    state: present
+    line: "{{ item }}"
+  with_items:
+  - "local all {{ postgres_user }} md5"
+  - "host all {{ postgres_user }} 127.0.0.1/32 md5"
   register: postgresql_config
+
+#- name: Configuration deployed
+#  template:
+#    src: "templates/pg_hba.conf.j2"
+#    dest: "/var/lib/pgsql/data/pg_hba.conf"
+#    owner: "postgres"
+#    group: "postgres"
+#  notify: restart postgresql
+#  register: postgresql_config
 
 - name: Restart postgresql server after configration change
   service: name="postgresql" state="restarted"
