@@ -1,18 +1,50 @@
+[production:children]
+crawlers
+
 [crawlers]
-crawler01 ansible_host=10.10.0.201 localName="0"
-crawler03 ansible_host=10.10.0.203 localName="1"
-crawler05 ansible_host=10.10.0.205 localName="2"
-crawler07 ansible_host=10.10.0.207 localName="3"
-crawler11 ansible_host=10.10.0.211 localName="4"
-crawler13 ansible_host=10.10.0.213 localName="5"
-crawler14 ansible_host=10.10.0.214 localName="6"
-crawler16 ansible_host=10.10.0.216 localName="7"
-crawler17 ansible_host=10.10.0.217 localName="8"
-crawler18 ansible_host=10.10.0.218 localName="9"
+#crawler00 ansible_host=10.10.0.200
+crawler01 ansible_host=10.10.0.201 localName="0" vmware_name="CRAWLER01_restore"
+crawler03 ansible_host=10.10.0.203 localName="1" vmware_name="CRAWLER03"
+crawler05 ansible_host=10.10.0.205 localName="2" vmware_name="CRAWLER05"
+crawler07 ansible_host=10.10.0.207 localName="3" vmware_name="CRAWLER07"
+crawler11 ansible_host=10.10.0.211 localName="4" vmware_name="CRAWLER11"
+crawler13 ansible_host=10.10.0.213 localName="5" vmware_name="CRAWLER13"
+crawler14 ansible_host=10.10.0.214 localName="6" vmware_name="CRAWLER14"
+crawler16 ansible_host=10.10.0.216 localName="7" vmware_name="CRAWLER16"
+crawler17 ansible_host=10.10.0.217 localName="8" vmware_name="CRAWLER17"
+crawler18 ansible_host=10.10.0.218 localName="9" vmware_name="CRAWLER18"
 
+[hnas1]
+crawler01
+crawler03
+crawler05
 
-[crawlers:vars]
+[hnas2]
+#crawler00
+crawler07
+crawler11
+
+[hnas3]
+crawler13
+crawler14
+crawler16
+crawler17
+crawler18
+
+[vcenter]
+crawler01
+crawler03
+crawler05
+crawler07
+crawler11
+crawler13
+crawler14
+crawler16
+crawler17
+crawler18
+
+[all:vars]
 ansible_ssh_user=root
 ansible_ssh_private_key_file=~/.ssh/id_rsa
-ansible_become=true
-ansible_become_user=heritrix
+#ansible_become=true
+#ansible_become_user=heritrix
