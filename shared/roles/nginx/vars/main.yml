@@ -1,6 +1,0 @@
----
-nginx_domain: "{{ ansible_hostname }}"
-nginx_logs: "/var/log/"
-nginx_uwsgi: 
-nginx_app: 
-...
