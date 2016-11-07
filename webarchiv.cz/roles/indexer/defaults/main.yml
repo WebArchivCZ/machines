@@ -1,0 +1,17 @@
+---
+archive_user: vagrant
+archive_group: users
+md5file_path: /mnt/archive/files.md5
+
+CDXindexer:
+  program: cdx-indexer
+  user: vagrant
+  command: /opt/scripts/indexer.sh {{ md5file_path }}
+  #  user_comment:
+  #  user_home:
+  autorestart: false
+  autostart: false
+  stdout_logfile: /var/log/cdx-indexer/cdx-indexer_stdout.log
+  stderr_logfile: /var/log/cdx-indexer/cdx-indexer_sterr.log
+  redirect_err: true
+  stopsignal: QUIT

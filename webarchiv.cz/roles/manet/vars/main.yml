@@ -1,0 +1,10 @@
+supervisord_apps:
+- name: manet
+  user: manet
+  command: manet
+  environment: ""
+  user_comment: "rest api for generating screenshots"
+  user_home: "/usr/lib/node_modules/manet"
+  autostart: true
+  autorestart: true
+  redirect_err: true

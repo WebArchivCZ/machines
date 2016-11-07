@@ -1,0 +1,10 @@
+- name: Bintray uploader playbook
+  hosts: localhost
+  connection: local
+  become: false
+
+  tasks:
+  - name: Get list of repos writable by kreibich
+    uri:
+      url: 'https://api.bintray.com/repos/:kreibich'
+      method: GET

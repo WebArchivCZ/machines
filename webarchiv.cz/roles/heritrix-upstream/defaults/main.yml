@@ -1,0 +1,6 @@
+---
+# defaults file for heritrix
+heritrix_version: 3.2.0
+heritrix_user: vagrant
+heritrix_group: vagrant
+heritrix_path: /opt/heritrix

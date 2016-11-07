@@ -1,0 +1,7 @@
+---
+- hosts: seeder
+  roles:
+  - sentry
+  - mysql-wadmin # comment it if you do not want to run legacy_sync
+  - wa-kat
+  - seeder

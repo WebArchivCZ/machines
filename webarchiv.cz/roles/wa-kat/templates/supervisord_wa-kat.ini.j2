@@ -1,0 +1,10 @@
+[program:wa-kat]
+command=wa_kat_server.py
+environment=SETTINGS_PATH="{{ wa_kat_settings_dir }}/wa_kat.json"
+user={{ wa_kat_user }}
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/wa-kat/stdout.log
+stderr_logfile=/var/log/wa-kat/sterr.log
+redirect_stderr=true
+stopsignal=QUIT

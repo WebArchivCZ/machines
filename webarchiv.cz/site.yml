@@ -1,0 +1,7 @@
+---
+- include: vcenter.yml # All VMs are ingited and ready for action
+- include: archive-sample.yml # Tasks are engaged only with development inventory
+- include: crawlers.yml
+- include: indexers.yml
+- include: wayback.yml
+- include: seeder.yml

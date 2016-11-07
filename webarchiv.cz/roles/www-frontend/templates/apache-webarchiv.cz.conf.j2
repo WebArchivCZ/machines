@@ -1,0 +1,6 @@
+<VirtualHost *:80>
+ ServerName {{ www_frontend }}
+ ServerAdmin {{ www_contact }}
+ ProxyPass         /  http://{{ www_backend }}
+ ProxyPassReverse  /  http://{{ www_backend }}
+</VirtualHost>

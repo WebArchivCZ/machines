@@ -1,0 +1,16 @@
+---
+# tasks file for JDK-8-Oracle
+
+- name: get Oracle Java JDK 8 update 102
+  get_url:
+    url: 'http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.rpm'
+    headers: 'Cookie:oraclelicense=accept-securebackup-cookie'
+    dest: '/tmp/jdk-8u102-linux-x64.rpm'
+    checksum: 'md5: 1ffe998845b594c66db2703dd5f60d88'
+  tags: provision
+
+- name: install Oracle Java JDK 8 update 102
+  yum:
+    name: '/tmp/jdk-8u102-linux-x64.rpm'
+    state: present
+  tags: provision

@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  # For a complete reference, please see the online documentation at https://docs.vagrantup.com.
+  
+  # Customize VM
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "512"]
+  end
+  
+#  config.vm.box = "bento/centos-7.2" # bento repo has SELinux disabled, but is faster to load
+  config.vm.box = "centos/7" # centos repo has SELinux enabled, thus should be closer to production env
+
+  # per box configuration
+  config.vm.define "vagrant00" do |vagrant00|
+#     vagrant00.vm.box = "suse/sles11sp3"
+#     vagrant00.vm.box = "opensuse/openSUSE-13.2-x86_64" # Not exactly production box, but close enough
+  end
+
+  # per box configuration
+  config.vm.define "vagrant01" do |vagrant01|
+#     vagrant01.vm.box = "suse/sles11sp3"
+     vagrant01.vm.box = "opensuse/openSUSE-13.2-x86_64" # Not exactly production box, but close enough
+  end
+
+  {
+    'vagrant00'	=> '192.168.200.10',
+    'vagrant01'	=> '192.168.200.11',
+  }.each do |short_name, ip|
+      config.vm.define short_name do |host|
+        host.vm.network 'private_network', ip: ip
+        host.vm.hostname = "#{short_name}.webarchiv.cz"
+      end
+  end
+
+  # Provisioning with Ansible
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "site.yml"
+    ansible.inventory_path = "development"
+    ansible.host_key_checking = "false"
+  end
+end

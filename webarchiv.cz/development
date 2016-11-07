@@ -1,0 +1,22 @@
+[vagrant-machines]
+vagrant00 ansible_host=192.168.200.10 ansible_ssh_private_key_file=.vagrant/machines/vagrant00/virtualbox/private_key
+vagrant01 ansible_host=192.168.200.11 ansible_ssh_private_key_file=.vagrant/machines/vagrant01/virtualbox/private_key
+
+[crawlers]
+vagrant00
+
+[indexers]
+vagrant00
+
+[waybacks]
+vagrant00
+
+[seeder]
+vagrant00
+
+[development:children]
+crawlers
+indexers
+
+[vagrant-machines:vars]
+ansible_ssh_user=vagrant

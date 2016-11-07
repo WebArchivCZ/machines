@@ -1,0 +1,78 @@
+---
+- name: provision time
+  yum:
+    name: git, maven, tomcat
+
+- name: "git clone {{ openwayback_overlay_repo }}"
+  git:
+    dest: "{{ openwayback_overlay_path }}"
+    repo: "{{ openwayback_overlay_repo }}"
+    force: "yes"
+  tags: repo
+
+- name: prepare configuration for build
+  template: src="{{ item.src }}" dest="{{ item.dest }}"
+  with_items:
+    - { src: "pom.xml.j2", dest: "{{ openwayback_overlay_path }}/pom-ansible.xml" }
+    - { src: "wayback.xml.j2", dest: "{{ openwayback_overlay_path }}/src/main/webapp/WEB-INF/wayback.xml" }
+    - { src: "CDXCollection.xml.j2", dest: "{{ openwayback_overlay_path }}/src/main/webapp/WEB-INF/CDXCollection.xml" }
+    - { src: "BDBCollection.xml.j2", dest: "{{ openwayback_overlay_path }}/src/main/webapp/WEB-INF/BDBCollection.xml" }
+  register: wayback_config
+  tags: build
+
+- block:
+  - name: prepare directory and file structure
+    file:
+      path: "{{ openwayback_basedir }}/{{ item.path }}"
+      state: "{{ item.state }}"
+      owner: tomcat
+      group: tomcat
+    with_items:
+     - { path: "scripts", state: directory }
+     - { path: "path-index", state: directory }
+     - { path: "cdx-index", state: directory }
+     - { path: "url-filters", state: directory }
+#     - { path: "url-filters/whitelist.txt", state: touch }
+#     - { path: "url-filters/blacklist.txt", state: touch }
+
+  - name: prepare files
+    copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}"
+      owner: tomcat
+      group: tomcat
+    with_items:
+     - { src: index-path.sh, dest: "{{ openwayback_basedir }}/scripts/path-index.sh", mode: "u+x" }
+     - { src: whitelist.txt, dest: "{{ openwayback_basedir }}/url-filters/whitelist.txt", mode: "u+r" }
+     - { src: blacklist.txt, dest: "{{ openwayback_basedir }}/url-filters/blacklist.txt", mode: "u+r" }
+
+  - name: set cron entries
+    cron: 
+      name: "{{ item.name }}"
+      job: "{{ openwayback_basedir }}/scripts/{{ item.job }}"
+      minute: "{{ item.minute }}"
+      hour: "{{ item.hour }}"
+      user: tomcat
+    with_items:
+     - { name: "{{ openwayback_basedir}}/path-index/path-index.txt is updated every night", job: "path-index.sh {{ openwayback_archive }} {{ openwayback_basedir }}/path-index/path-index.txt", hour: "23", minute: "0" }
+  when: openwayback_collection == 'cdx'
+
+- name: tomcat is running even after restart
+  service:
+    name: tomcat
+    state: running
+    enabled: yes
+  tags: service
+
+- name: build openwayback WAR artifact with Maven and deploy to Tomcat
+  command: "{{ item }}"
+  with_items:
+    - "mvn -f pom-ansible.xml package"
+    - "cp target/{{ openwayback_artifact}} /usr/share/tomcat/webapps/ROOT.war"
+  environment: 
+    JAVA_HOME: "/usr/java/latest/"
+  args:
+    chdir: "{{ openwayback_overlay_path }}"
+  when: wayback_config.changed
+  tags: build

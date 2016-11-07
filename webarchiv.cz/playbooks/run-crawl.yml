@@ -1,0 +1,59 @@
+---
+- hosts: crawlers-cluster
+
+  vars:
+    confpath: "/opt/heritrix/jobs/CZ-2016-04/"
+    jobname: "CZ Domain Crawl 2016 04"
+    description: "Celoplošná sklizeň českých domén v dubnu roku 2016"
+    crawlercount: "10"
+    prefix: "CZ-2016-04"
+    store: "/mnt/archives/archive14/2016/CZ-2016-04/"
+    state: "/mnt/archives/archive14/crawl-states/{{ ansible_hostname }}/state/"
+    diversion: "/mnt/archives/archive14/CZ-2016-04-prefetch-diversions/"
+    history: "/opt/heritrix/jobs/CZ-2015-12-CrawlHistory/"
+    crawl_port: "7778"
+  environment:
+    JAVA_HOME: "/opt/java/latest"
+    HERITRIX_HOME: "/opt/heritrix/running"
+    JAVA_OPTS: "-Xmx13000m"
+
+  tasks:
+    
+  - name: "Loading credentials for Crawler"
+    include_vars: "encrypted/credentials.yml"
+
+  - name: "Directory for crawl exists: {{ store }}"
+    file: path={{ store }} state="directory"
+
+  - name: "Directory for crawl configuration and reports exist: {{ confpath }}"
+    file: path={{ confpath }} state="directory"
+
+  - name: "Deploying crawler-beans.cxml from template to: {{ confpath }}"
+    template: src="templates/crawler-beans.cxml.j2" dest="{{ confpath }}crawler-beans.cxml"
+
+  - name: "Copying files needed for crawl to: {{ confpath }}"
+    copy: src="files/" dest={{ confpath }}
+
+  - name: "Directory for WARCs exists and is writable for group: {{ store }}"
+    file: path="{{ store }}" state="directory" mode="g+w"
+
+  - name: "Directory for URL diversion exists and is writable for group: {{ diversion }}"
+    file: path="{{ diversion }}" state="directory" mode="g+w"
+
+  - name: "Check for Heritrix process"
+    shell: "ps aux |grep '/opt/java/latest/bin/java -Dheritrix.home=/opt/heritrix/running'|grep -v grep"
+    register: heritrix
+    ignore_errors: true
+
+  - name: "Run Heritrix if not already running"
+    shell: "$HERITRIX_HOME/bin/heritrix -b {{ ansible_host }} --web-admin {{ user }}:{{ password }} --web-port {{ crawl_port }}"
+    when: heritrix|failed
+
+  - name: "Add crawl job path: {{ confpath }}"
+    shell: "curl -v -d 'action=add&addpath={{ confpath }}' -k -u {{ user }}:{{ password }} --anyauth --location 'https://{{ ansible_host }}:{{ crawl_port }}/engine'"
+
+  - name: "Create crawl job: {{ prefix }}"
+    shell: "curl -v -d 'createpath={{ prefix }}&action=create' -k -u {{ user }}:{{ password }} --anyauth --location 'https://{{ ansible_host }}:{{ crawl_port }}/engine'"
+
+  - name: "Launch job: {{ prefix }} | Launch is paused, should be started from web interface"
+    shell: "curl -v -d 'action=launch' -k -u {{ user }}:{{ password }} --anyauth --location https://{{ ansible_host}}:{{ crawl_port }}/engine/job/{{ prefix }}"

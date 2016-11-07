@@ -1,0 +1,11 @@
+dependencies:
+- role: "nginx"
+
+- role: "postgresql"
+  postgres_user: "{{ seeder_db_user }}"
+  postgres_pass: "{{ seeder_db_pass }}"
+  postgres_dbs: "{{ seeder_db_name }}"
+
+- role: "elasticsearch"
+
+- role: "manet"

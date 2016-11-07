@@ -1,0 +1,38 @@
+---
+- name: Add EPEL repository to yum
+  yum:
+    name: epel-release
+    state: present
+  tags: supervisor
+
+- name: Install PIP package manager for python apps
+  yum:
+    name: python-pip
+    state: present
+  tags: supervisor
+
+- name: Upgrade PIP packages to latest versions
+  pip:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+  - pip
+  - supervisor
+  tags: supervisor
+
+- name: Deploy files
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ item.owner | default(omit) }}'
+    group: '{{ item.group | default(omit) }}'
+    mode: '{{ item.mode | default(omit) }}'
+  with_items:
+  - { src: supervisord.conf.j2, dest: /etc/supervisord.conf, mode: '0644' }
+  tags: supervisor
+
+- name: Dir for supervisord apps exists 
+  file:
+    state: directory
+    path: /etc/supervisord.d/
+  tags: supervisor

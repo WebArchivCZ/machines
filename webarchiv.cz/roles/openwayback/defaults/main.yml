@@ -1,0 +1,33 @@
+---
+# Maven build
+openwayback_overlay_repo: "https://github.com/WebArchivCZ/OpenWayback-devel.git"
+openwayback_overlay_path: /opt/openwayback-overlay
+openwayback_overlay_artifactid: openwayback-production
+openwayback_version: "2.3.0"
+openwayback_artifact: "{{ openwayback_overlay_artifactid }}-{{ openwayback_version}}.war"
+
+# Openwayback configuration
+openwayback_basedir: /tmp/openwayback
+openwayback_basedir_curators: /tmp/openwayback-curators
+openwayback_host: "{{ ansible_hostname }}"
+openwayback_frontend: "{{ ansible_hostname }}:8080" #hostname:port
+
+#openwayback_port: 8080
+#openwayback_port_frontend: 80
+#openwayback_resource: "BDB" # BDB, CDX, Remote, Nutch
+
+openwayback_collection: "bdb" # bdb, cdx
+openwayback_capturejsp: "BubbleCalendar" # CalendarResults, HTMLCaptureResults, BubbleCalendar
+# WARC/ARC directories
+openwayback_archive:
+- { name: '05', path: '/mnt/archives/05', recurse: true }
+- { name: '06', path: '/mnt/archives/06', recurse: true }
+- { name: '07', path: '/mnt/archives/07', recurse: true }
+- { name: '08', path: '/mnt/archives/08', recurse: true }
+- { name: '09', path: '/mnt/archives/09', recurse: true }
+- { name: '10', path: '/mnt/archives/10', recurse: true }
+- { name: '11', path: '/mnt/archives/11', recurse: true }
+- { name: '12', path: '/mnt/archives/12', recurse: true }
+- { name: '13', path: '/mnt/archives/13', recurse: true }
+- { name: '14', path: '/mnt/archives/14', recurse: true }
+...

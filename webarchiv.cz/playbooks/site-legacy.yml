@@ -1,0 +1,14 @@
+---
+- hosts: all
+  roles:
+  - common
+
+- hosts: war
+  roles:
+  - sentry
+  - mysql-wadmin # comment it if you do not want to run legacy_sync
+  - wa-kat
+  - seeder
+#  - { role: "wayback",  openwayback_version: "2.3.1", openwayback_collection: "cdx", openwayback_resource: "CDX", openwayback_host: 192.168.60.20 }
+#  - { role: "WA-sample", wasample_group: "tomcat" }
+#  - { role: seeder-docker, tags: docker }

@@ -1,0 +1,11 @@
+- name: set permissions
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: "g+w"
+    owner: nginx
+    group: nginx
+  with_items:
+  - "{{ sentry_virtualenv_dir }}"
+  tags: permissions

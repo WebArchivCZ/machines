@@ -1,0 +1,20 @@
+---
+seeder_allowed: "war', 'war.webarchiv.cz', '127.0.0.1', '10.3.0.20', '195.113.134.20" # missing quotes at start and end is the feature
+seeder_debug: False
+seeder_sentry: '{{ vault_seeder_sentry }}'
+wadmin_db_connected: True
+wadmin_sql: wadmin.sql.gz
+openwayback_version: "2.3.1"
+openwayback_collection: "cdx"
+openwayback_resource: "CDX"
+openwayback_host: "war.webarchiv.cz"
+openwayback_overlay_path: /opt/git/openwayback-overlay
+openwayback_basedir: /mnt/raid1/openwayback
+openwayback_basedir_curators: /mnt/raid1/openwayback-curators
+openwayback_archive:
+- { name: 'testCrawls', path: '/mnt/har-testCrawls/', recurse: true }
+#- { name: 'testCrawls-12', path: '/mnt/12-testCrawls/', recurse: false }
+#- { name: 'testCrawls-12-2013', path: '/mnt/12-2013-testCrawls/', recurse: false }
+#- { name: 'topics2013', path: '/mnt/2013-topics/', recurse: true }
+#- { name: 'topics2014', path: '/mnt/14/topics/', recurse: true }
+#- { name: 'topics2015', path: '/mnt/14/2015/topics/', recurse: true }

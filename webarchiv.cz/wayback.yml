@@ -1,0 +1,6 @@
+---
+- hosts: waybacks
+
+  roles:
+#  - { role: "wayback",  openwayback_version: "2.3.1", openwayback_collection: "cdx", openwayback_resource: "CDX"}
+   - { role: "openwayback" }

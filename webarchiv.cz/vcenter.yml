@@ -1,0 +1,14 @@
+- name: Vcenter playbook
+  hosts: vcenter
+  connection: local
+  become: false
+  
+  tasks:
+  - name: VM is running
+    vsphere_guest:
+      guest: '{{ vmware_name }}'
+      state: powered_on
+      vcenter_hostname: hvms-local.nkp.cz
+      username: '{{ vcenter_user }}'
+      password: '{{ vcenter_pass }}'
+      validate_certs: false

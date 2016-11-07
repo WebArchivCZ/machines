@@ -1,0 +1,6 @@
+---
+# defaults file for wayback-upstream
+openwayback_version: 2.3.1
+openwayback_user: vagrant
+openwayback_group: vagrant
+openwayback_path: /opt

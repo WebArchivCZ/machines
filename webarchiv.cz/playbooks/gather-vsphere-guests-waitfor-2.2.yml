@@ -1,0 +1,11 @@
+- hosts: localhost
+  become: no
+
+  tasks:
+  - name: Gathering
+    local_action:
+        module: vmware_vm_facts
+        hostname: hvms-local.nkp.cz
+        username: '{{ vcenter_user }}'
+        password: '{{ vcenter_pass }}'
+        validate_certs: False

@@ -1,0 +1,93 @@
+#
+# This is staging inventory, equivalent to all
+#
+[staging:children]
+vcenter
+baremetal
+
+#
+# Servers are VMware VMs or Bare metal servers 
+#
+
+[vcenter]
+#crawler00 ansible_host=10.10.0.200
+#crawler02 ansible_host=10.10.0.202 vmware_name="CRAWLER02"
+#crawler04 ansible_host=10.10.0.204 vmware_name="CRAWLER04"
+#crawler06 ansible_host=10.10.0.206 vmware_name="CRAWLER06"
+#crawler08 ansible_host=10.10.0.208 vmware_name="CRAWLER08"
+#crawler09 ansible_host=10.10.0.209 vmware_name="CRAWLER09"
+#crawler10 ansible_host=10.10.0.210 vmware_name="CRAWLER10"
+#crawler12 ansible_host=10.10.0.212 vmware_name="CRAWLER12"
+crawler01 ansible_host=10.10.0.201 vmware_name="CRAWLER01_restore" localName="0"
+crawler03 ansible_host=10.10.0.203 vmware_name="CRAWLER03" localName="1"
+crawler05 ansible_host=10.10.0.205 vmware_name="CRAWLER05" localName="2"
+crawler07 ansible_host=10.10.0.207 vmware_name="CROWLER07" localName="3"
+crawler11 ansible_host=10.10.0.211 vmware_name="CRAWLER11" localName="4"
+crawler13 ansible_host=10.10.0.213 vmware_name="CRAWLER13" localName="5"
+crawler14 ansible_host=10.10.0.214 vmware_name="CRAWLER14" localName="6"
+crawler16 ansible_host=10.10.0.216 vmware_name="CRAWLER16" localName="7"
+crawler17 ansible_host=10.10.0.217 vmware_name="CRAWLER17" localName="8"
+crawler18 ansible_host=10.10.0.218 vmware_name="CRAWLER18" localName="9"
+wapublic2 ansible_host=195.113.132.93 vmware_name="WAPUBLIC2"
+
+[baremetal]
+war ansible_host=10.3.0.20
+
+#
+# Serveres are separated into Crawlers, Indexers, Load Balancers, Webservers and Database servers. We usally play playbooks against these groups.
+#
+
+[webservers]
+war
+
+[seeder]
+war
+
+[balancers]
+wapublic2
+
+[crawlers]
+crawler01
+crawler03
+crawler05
+crawler07
+crawler11
+crawler13
+crawler14
+crawler16
+crawler17
+crawler18
+#crawler00
+#crawler02
+#crawler04
+#crawler06
+#crawler08
+#crawler09
+#crawler10
+#crawler12
+#crawler15
+
+#
+# Web archive storage is accessed thru three NFSv3 HNAS servers with access to SAN GPFS storage.
+#
+
+[hnas1]
+crawler01
+crawler03
+crawler05
+
+[hnas2]
+#crawler00
+crawler07
+crawler11
+
+[hnas3]
+crawler13
+crawler14
+crawler16
+crawler17
+crawler18
+
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file=~/.ssh/id_rsa

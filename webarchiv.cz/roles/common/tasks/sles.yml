@@ -1,0 +1,53 @@
+- name: Install beloved packages
+  zypper: name="{{ item }}" state="installed"
+  with_items:
+    - "ntp"  # Time matters.
+    - "unzip" # Ansible enjoys unzip
+    - "vim" # Everybody loves vim!
+#    - "git" # Heart of everything | SLES needs SDK
+  tags: common,time
+
+- name: Add tik/tak.cesnet.cz to ntp.conf # Tells changed all the time
+  command: rcntp addserver '{{ item }}'
+  with_items:
+  - 'tik.cesnet.cz'
+  - 'tak.cesnet.cz'
+  notify: restart ntp
+
+- name: NTP daemon is running
+  service: 
+    name: ntp 
+    state: started 
+    enabled: yes
+  tags: common,time
+
+- name: Set timezone to Europe/Prague | CEST
+  file: 
+    path: /etc/localtime
+    state: link
+    src: /usr/share/zoneinfo/Europe/Prague
+  tags: common,time
+
+
+- name: postfix relay to smtp.nkp.cz
+  lineinfile: dest="/etc/postfix/main.cf" line="relayhost= [10.1.2.183]"
+  tags: common
+
+- name: Create admin users
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups}}"
+    createhome: yes
+    comment: "{{ item.comment }}"
+    password: "{{ item.password }}"
+    append: yes
+  with_items: "{{ admins }}"
+  ignore_errors: "yes" # Workaround before proper conditional for outsiders
+  tags: common,users
+
+
+- name: Add public keys to for admins
+  authorized_key: user="{{ item.name }}" key="{{ item.public_keys }}"
+  with_items: "{{ admins }}"
+  ignore_errors: "yes" # Workaround before proper conditional for outsiders
+  tags: common,users

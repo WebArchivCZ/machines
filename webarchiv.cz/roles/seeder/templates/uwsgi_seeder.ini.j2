@@ -1,0 +1,17 @@
+[uwsgi]
+virtualenv      = {{ seeder_virtualenv }}
+pythonpath      = {{ seeder_home }}/Seeder
+plugins         = python3
+master          = 1
+pidfile         = {{ seeder_home }}/seeder.pid
+touch-reload    = {{ seeder_home }}/reload.touch
+socket          = {{ seeder_home }}/seeder.sock
+chmod-socket    = 777
+cheaper-algo    = spare
+cheaper         = 2
+cheaper-initial = 2
+cheaper-step    = 1
+processes       = 6
+vacuum          = 1
+harakiri        = 60
+wsgi-file       = {{ seeder_home }}/Seeder/wsgi.py
