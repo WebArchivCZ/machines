@@ -3,7 +3,8 @@ seeder_allowed: "war', 'war.webarchiv.cz', '127.0.0.1', '10.3.0.20', '195.113.13
 seeder_debug: False
 seeder_sentry: '{{ vault_seeder_sentry }}'
 wadmin_db_connected: True
-wadmin_sql: wadmin.sql.gz
+#wadmin_sql: wadmin.sql.gz
+wadmin_sql: wadmin-2016-11-22.sql
 openwayback_version: "2.3.1"
 openwayback_collection: "cdx"
 openwayback_resource: "CDX"
