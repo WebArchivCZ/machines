@@ -1,5 +1,6 @@
 ---
-- include: vcenter.yml # All VMs are ingited and ready for action
+- include: deploy-vm.yml # VMs are deployed to staging
+- include: vcenter.yml # All VMs are ignited and ready for action
 - include: archive-sample.yml # Tasks are engaged only with development inventory
 - include: crawlers.yml
 - include: indexers.yml
