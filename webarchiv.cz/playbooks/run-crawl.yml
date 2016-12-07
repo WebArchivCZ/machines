@@ -1,27 +1,25 @@
 ---
-- hosts: crawlers-cluster
+- hosts: crawlers
 
   vars:
     confpath: "/opt/heritrix/jobs/CZ-2016-04/"
     jobname: "CZ Domain Crawl 2016 04"
     description: "Celoplošná sklizeň českých domén v dubnu roku 2016"
-    crawlercount: "10"
+    crawlercount: "2"
+  #   crawlercount: "10"
     prefix: "CZ-2016-04"
     store: "/mnt/archives/archive14/2016/CZ-2016-04/"
     state: "/mnt/archives/archive14/crawl-states/{{ ansible_hostname }}/state/"
     diversion: "/mnt/archives/archive14/CZ-2016-04-prefetch-diversions/"
     history: "/opt/heritrix/jobs/CZ-2015-12-CrawlHistory/"
-    crawl_port: "7778"
+
   environment:
-    JAVA_HOME: "/opt/java/latest"
-    HERITRIX_HOME: "/opt/heritrix/running"
-    JAVA_OPTS: "-Xmx13000m"
+    JAVA_HOME: '{{ java_home }}'
+    HERITRIX_HOME: '{{ heritrix_home }}'
+    JAVA_OPTS: '{{ java_opts }}'
 
   tasks:
     
-  - name: "Loading credentials for Crawler"
-    include_vars: "encrypted/credentials.yml"
-
   - name: "Directory for crawl exists: {{ store }}"
     file: path={{ store }} state="directory"
 
@@ -40,20 +38,44 @@
   - name: "Directory for URL diversion exists and is writable for group: {{ diversion }}"
     file: path="{{ diversion }}" state="directory" mode="g+w"
 
+  - name: 'Clone Crawler configuration from github'
+    git:
+      repo: 'git://github.com/webarchivCZ/Crawler-config.git'
+      dest: '/opt/heritrix/jobs/Crawler-config'
+
+
+  - name: 'ansible.adhoc.keystore exists'
+    command: '{{ java_home }}/bin/keytool -keystore {{ heritrix_home }}/ansible-adhoc.keystore -storepass {{ heritrix_ssl_storepass }} -keypass {{ heritrix_ssl_keypass }} -alias adhoc -genkey -keyalg RSA -dname "CN=Heritrix Ad-Hoc HTTPS Certificate" -validity 3650'
+    args:
+      creates: '{{ heritrix_home }}/ansible-adhoc.keystore'
+
+  - name: 'default adhoc.keystore exists'
+    stat:
+      path: '{{ heritrix_home }}/adhoc.keystore'
+    register: heritrix_keystore
+
   - name: "Check for Heritrix process"
-    shell: "ps aux |grep '/opt/java/latest/bin/java -Dheritrix.home=/opt/heritrix/running'|grep -v grep"
-    register: heritrix
+    shell: "ps aux |grep '{{ java_home }}/bin/java -Dheritrix.home={{ heritrix_home }}'|grep -v grep"
+    register: heritrix_started
     ignore_errors: true
 
-  - name: "Run Heritrix if not already running"
-    shell: "$HERITRIX_HOME/bin/heritrix -b {{ ansible_host }} --web-admin {{ user }}:{{ password }} --web-port {{ crawl_port }}"
-    when: heritrix|failed
+  - name: "Run Heritrix with default keystore if not already running"
+    shell: "{{ heritrix_home }}/bin/heritrix -b {{ ansible_host }} --web-admin {{ heritrix_www_user }}:{{ heritrix_www_password }} --web-port {{ crawl_port }}"
+    when: 
+      - heritrix_started|failed
+      - heritrix_keystore.stat.exists == True
+
+  - name: "Run Heritrix with ansible-adhoc.keystore if not already running"
+    shell: "{{ heritrix_home }}/bin/heritrix -b {{ ansible_host }} --web-admin {{ heritrix_www_user }}:{{ heritrix_www_password }} --web-port {{ crawl_port }} -s {{ heritrix_home }}/ansible-adhoc.keystore,{{ heritrix_ssl_storepass }},{{ heritrix_ssl_keypass }}"
+    when: 
+      - heritrix_started|failed
+      - heritrix_keystore.stat.exists == False
 
   - name: "Add crawl job path: {{ confpath }}"
-    shell: "curl -v -d 'action=add&addpath={{ confpath }}' -k -u {{ user }}:{{ password }} --anyauth --location 'https://{{ ansible_host }}:{{ crawl_port }}/engine'"
+    shell: "curl -v -d 'action=add&addpath={{ confpath }}' -k -u {{ heritrix_www_user }}:{{ heritrix_www_password }} --anyauth --location 'https://{{ ansible_host }}:{{ crawl_port }}/engine'"
 
   - name: "Create crawl job: {{ prefix }}"
-    shell: "curl -v -d 'createpath={{ prefix }}&action=create' -k -u {{ user }}:{{ password }} --anyauth --location 'https://{{ ansible_host }}:{{ crawl_port }}/engine'"
+    shell: "curl -v -d 'createpath={{ prefix }}&action=create' -k -u {{ heritrix_www_user }}:{{ heritrix_www_password }} --anyauth --location 'https://{{ ansible_host }}:{{ crawl_port }}/engine'"
 
   - name: "Launch job: {{ prefix }} | Launch is paused, should be started from web interface"
-    shell: "curl -v -d 'action=launch' -k -u {{ user }}:{{ password }} --anyauth --location https://{{ ansible_host}}:{{ crawl_port }}/engine/job/{{ prefix }}"
+    shell: "curl -v -d 'action=launch' -k -u {{ heritrix_www_user }}:{{ heritrix_www_password }} --anyauth --location https://{{ ansible_host}}:{{ crawl_port }}/engine/job/{{ prefix }}"
