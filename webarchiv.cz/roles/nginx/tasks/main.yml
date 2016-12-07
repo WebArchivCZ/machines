@@ -9,15 +9,15 @@
     name: nginx
   tags: nginx
 
-- name: Admins are part of nginx group
-  user:
-    name: '{{ item.name }}'
-    append: yes
-    groups: nginx
-  with_items:
-  - '{{ admins }}'
-  tags: nginx
-  when: admins is defined
+  #- name: Admins are part of nginx group
+  #  user:
+  #    name: "{{ item.name }}"
+  #    append: yes
+  #    groups: nginx
+  #  with_items:
+  #  - "{{ admins }}"
+  #  tags: nginx
+  #  when: admins is defined
 
 - name: Self-signed certificate ready
   command: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=CZ/ST=Prague/L=Klementinum/O=NLCR/CN=rudolf.kreibich@nkp.cz" -keyout /etc/nginx/nginx-{{ ansible_fqdn }}.key -out /etc/nginx/nginx-{{ ansible_fqdn }}.crt'
