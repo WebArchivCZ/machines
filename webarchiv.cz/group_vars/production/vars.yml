@@ -12,6 +12,10 @@ admins:
     password: '{{ jarda.password }}'
     public_keys: '{{ jarda.public_keys }}'
 
+heritrix_www_user: '{{ vault_heritrix_www_user }}'
+heritrix_www_password: '{{ vault_heritrix_www_password }}'
+heritrix_home: /opt/heritrix/running
+
 hnas_archives:
 - { hnas_path: '/webarchiv/archive05', archive: '/mnt/archives/05', opts: 'defaults,ro' }
 - { hnas_path: '/webarchiv/archive06', archive: '/mnt/archives/06', opts: 'defaults,ro' }
