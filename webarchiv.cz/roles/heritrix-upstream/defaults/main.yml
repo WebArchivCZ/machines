@@ -4,3 +4,6 @@ heritrix_version: 3.2.0
 heritrix_user: vagrant
 heritrix_group: vagrant
 heritrix_path: /opt/heritrix
+heritrix_www_user: vagrant
+heritrix_www_password: vagrant
+heritrix_home: '{{ heritrix_path }}/heritrix-{{ heritrix_version }}'

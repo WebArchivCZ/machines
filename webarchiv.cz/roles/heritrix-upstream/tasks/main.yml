@@ -26,4 +26,4 @@
     dest: '{{ heritrix_path }}'
     owner: '{{ heritrix_user }}'
     group: '{{ heritrix_group }}'
-    creates: '{{ heritrix_path }}/heritrix-{{ heritrix_version }}/bin/heritrix'
+    creates: '{{ heritrix_home }}/bin/heritrix'
