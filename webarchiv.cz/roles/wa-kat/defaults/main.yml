@@ -1,7 +1,7 @@
 wa_kat_ip: 0.0.0.0
 wa_kat_port: 10001
 wa_kat_settings_dir: /opt
-wa_kat_corporpus_path: /opt/ntlk_data
+wa_kat_corpus_path: /opt/ntlk_data
 seeder_token: 1acedb1b6347d9d40fe2f055aa6d3c077f106894
 
 supervisord_apps:
