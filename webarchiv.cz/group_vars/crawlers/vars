@@ -1,2 +1,0 @@
-heritrix_www_user: '{{ vault_heritrix_www_user }}'
-heritrix_www_password: '{{ vault_heritrix_www_password }}'
