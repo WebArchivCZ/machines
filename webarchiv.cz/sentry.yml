@@ -1,0 +1,3 @@
+- hosts: seeder
+  roles:
+  - sentry
