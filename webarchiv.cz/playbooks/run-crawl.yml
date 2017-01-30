@@ -2,15 +2,13 @@
 - hosts: crawlers
 
   vars:
-    confpath: "/opt/heritrix/jobs/CZ-2016-04/"
-    jobname: "CZ Domain Crawl 2016 04"
-    description: "Celoplošná sklizeň českých domén v dubnu roku 2016"
-    crawlercount: "2"
-  #   crawlercount: "10"
-    prefix: "CZ-2016-04"
-    store: "/mnt/archives/archive14/2016/CZ-2016-04/"
-    state: "/mnt/archives/archive14/crawl-states/{{ ansible_hostname }}/state/"
-    diversion: "/mnt/archives/archive14/CZ-2016-04-prefetch-diversions/"
+    confpath: "/opt/heritrix/jobs/CZ-2016-12/"
+    jobname: "CZ Domain Crawl 2016 12"
+    description: "Celoplošná sklizeň českých domén v prosinci roku 2016"
+    prefix: "CZ-2016-12"
+    store: "/mnt/archives/14/2016/CZ-2016-12/"
+    state: "/mnt/archives/14/crawl-states/{{ ansible_hostname }}/state/"
+    diversion: "/mnt/archives/14/CZ-2016-12-prefetch-diversions/"
     history: "/opt/heritrix/jobs/CZ-2015-12-CrawlHistory/"
 
   environment:
@@ -38,10 +36,10 @@
   - name: "Directory for URL diversion exists and is writable for group: {{ diversion }}"
     file: path="{{ diversion }}" state="directory" mode="g+w"
 
-  - name: 'Clone Crawler configuration from github'
-    git:
-      repo: 'git://github.com/webarchivCZ/Crawler-config.git'
-      dest: '/opt/heritrix/jobs/Crawler-config'
+  #  - name: 'Clone Crawler configuration from github'
+  #    git:
+  #      repo: 'git://github.com/webarchivCZ/Crawler-config.git'
+  #      dest: '/opt/heritrix/jobs/Crawler-config'
 
 
   - name: 'ansible.adhoc.keystore exists'
