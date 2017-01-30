@@ -1,0 +1,2 @@
+vcenter_user: '{{ vault_vcenter_user }}'
+vcenter_pass: '{{ vault_vcenter_pass }}'

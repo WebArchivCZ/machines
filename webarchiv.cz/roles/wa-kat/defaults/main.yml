@@ -1,0 +1,26 @@
+wa_kat_ip: 0.0.0.0
+wa_kat_port: 10001
+wa_kat_settings_dir: /opt
+wa_kat_corpus_path: /opt/ntlk_data
+seeder_token: 1acedb1b6347d9d40fe2f055aa6d3c077f106894
+
+supervisord_apps:
+- name: wa_kat
+  user: wa_kat
+  command: wa_kat_server.py
+  environment: "SETTINGS_PATH=\"{{ wa_kat_settings_dir }}/wa_kat.json\""
+  user_comment: "semi automatic web cataloging tool"
+  user_home: "/no/home"
+  autostart: true
+  autorestart: true
+  redirect_err: true
+
+- name: zeo
+  user: zeo
+  command: sh -c 'runzeo -C $(python -c "from wa_kat.settings import *; print ZEO_SERVER_PATH")'
+  environment: ""
+  user_comment: "zeo database for wa_kat"
+  user_home: "/no/home"
+  autostart: true
+  autorestart: true
+  redirect_err: true

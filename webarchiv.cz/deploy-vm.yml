@@ -1,0 +1,39 @@
+- name: Vcenter playbook
+  hosts: vcenter
+  connection: local
+  become: false
+  
+  tasks:
+          #  - name: Copy VMs to Datastore
+          #    vsphere_copy:
+
+  - name: Deploy VMs
+    vsphere_guest:
+      guest: '{{ vmware_name }}'
+      resource_pool: '{{ vmware_pool }}'
+      template_src: VMs/packer-CentOS-7.2-production-1479161951.ovf
+      from_template: no
+  #      state: powered_on
+      vcenter_hostname: hvms-local.nkp.cz
+      username: '{{ vcenter_user }}'
+      password: '{{ vcenter_pass }}'
+      validate_certs: false
+      vm_disk:
+        disk1:
+          datastore: '{{ vmware_datastore }}'
+          type: '{{ vmware_type }}'
+          size_gb: '{{ vmware_size }}'
+      vm_nic:
+        nic1:
+          type: e1000
+          network: VL23
+          network_type: standard
+      vm_hardware:
+        memory_mb: '{{ vmware_memory }}'
+        num_cpus: '{{ vmware_cpu }}'
+        osid: '{{ vmware_osid }}'
+        scsi: '{{ vmware_scsi }}'
+#      cluster: '{{ vmware_cluster }}'
+      esxi:
+        datacenter: '{{ vmware_datacenter }}'
+        hostname: '{{ vmware_esx }}'

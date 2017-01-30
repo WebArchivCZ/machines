@@ -1,0 +1,6 @@
+---
+- hosts: seeder
+  roles:
+  - { role: mysql-wadmin, tags: wadmin } # comment it if you do not want to run legacy_sync
+  - wa-kat
+  - { role: seeder, tags: seeder }

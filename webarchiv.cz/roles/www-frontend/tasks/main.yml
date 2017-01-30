@@ -1,0 +1,7 @@
+---
+# tasks file for www-frontend
+
+- name: Deploy VirtualHost.conf
+  template: src="templates/apache-webarchiv.cz.conf.j2" dest="/etc/apache2/vhosts.d/webarchiv.cz.conf"
+  notify:
+  - restart apache

@@ -1,0 +1,5 @@
+---
+- hosts: indexers
+
+  roles:
+  - indexer

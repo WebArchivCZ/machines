@@ -1,0 +1,22 @@
+- name: "EPEL repository: installed." # EPEL repository contains npm package manager for node.js.
+  yum: name="epel-release"
+  tags: "manet,packages,yum"
+
+- name: "npm, supervisord: installed" # npm is package manager for node.js. Manet is easy to install thru npm. Manet will run in supervisord.
+  yum: name="npm"
+  with_items:
+  - "npm"
+  - "bzip2"
+  tags: "manet,packages,yum"
+
+- name: "Manet is installed" # npm installs Manet. Phantomjs is Manet's dependency. WORKAROUND:n handles node.js updates.
+  npm: name="{{ item }}" global="yes"
+  with_items:
+  - "phantomjs"
+  - "manet"
+  - "n" # WORKAROUND
+  tags: "manet,workaround,npm"
+
+- name: "WORKAROUND: Node.js is updated to latest stable." # Without node.js update, Manet crashes.
+  shell: n stable
+  tags: "manet,workaround"

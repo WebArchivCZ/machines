@@ -1,0 +1,59 @@
+- name: Install beloved packages
+  yum: name="{{ item }}" state="installed"
+  with_items:
+    - "ntp"  # Time matters.
+    - "unzip" # Ansible enjoys unzip
+    - "vim" # Everybody loves vim!
+    - "git" # Heart of everything
+  tags: common,time
+
+- name: Add tik/tak.cesnet.cz to ntp.conf
+  lineinfile: 
+    dest: "/etc/ntp.conf"
+    insertafter: "{{ item.regex }}"
+    line: "{{ item.line }}"
+  with_items:
+  - { regex: '^# Please consider joining the pool \(http://www.pool.ntp.org/join.html\)\.$', line: 'server tik.cesnet.cz' }
+  - { regex: '^server tik\.cesnet\.cz$', line: 'server tak.cesnet.cz' }
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  notify: restart ntpd
+  tags: time
+
+
+- name: NTP daemon is running
+  service: name=ntpd state=started enabled=yes
+  tags: common,time
+
+- name: Set timezone to Europe/Prague | CEST
+  when: ansible_date_time.tz != 'CEST'
+  shell: timedatectl set-timezone Europe/Prague
+  tags: common,time
+
+# Not idempotent, not critical - turning off
+#- name: Set RTC to UTC
+#  when: 
+#  shell: timedatectl set-local-rtc 0
+#  tags: common,time
+
+- name: postfix relay to smtp.nkp.cz
+  lineinfile: dest="/etc/postfix/main.cf" line="relayhost= [10.1.2.183]"
+  tags: common
+
+- name: Create admin users
+  user:
+    name="{{ item.name }}"
+    groups="{{ item.groups}}"
+    createhome="yes"
+    comment="{{ item.comment }}"
+    password="{{ item.password }}"
+    append="yes"
+  with_items: "{{ admins }}"
+  ignore_errors: "yes" # Workaround before proper conditional for outsiders
+  tags: common,users
+
+
+- name: Add public keys to for admins
+  authorized_key: user="{{ item.name }}" key="{{ item.public_keys }}"
+  with_items: "{{ admins }}"
+  ignore_errors: "yes" # Workaround before proper conditional for outsiders
+  tags: common,users

@@ -1,0 +1,59 @@
+#
+# This is staging inventory, equivalent to all
+#
+
+[staging:children]
+vcenter
+baremetal
+
+#
+# Servers are VMware VMs or Bare metal servers 
+#
+
+[vcenter]
+#dev-blcr0 ansible_host=10.3.0.50 vmware_name="dev-balancer0"
+dev-apps0 ansible_host=10.3.0.51 vmware_name="dev-application0" vmware_size=40 vmware_cpu=2 vmware_memory=8 vmware_esx=hbc2-esx03.nkp.cz
+#dev-supp0 ansible_host=10.3.0.52 vmware_name="dev-support0"
+#dev-dbs0  ansible-host=10.3.0.52 vmware_name="dev-database0"
+#dev-crwl0 ansible-host=10.3.0.53 vmware_name="dev-crawler0"
+
+[vcenter:vars]
+vmware_pool="/Resources/NORMAL/WEBARCHIV"
+vmware_datastore=HSTO03_VMWARE_WEBARCHIV01
+vmware_type=thin
+vmware_osid=centos64Guest
+vmware_scsi=paravirtual
+vmware_datacenter=Hostivar
+vmware_cluster=H1
+
+[baremetal]
+
+#
+# Serveres are separated into Crawlers, Indexers, Load Balancers, Webservers and Database servers. We usally play playbooks against these groups.
+#
+
+[webservers]
+dev-apps0
+
+[seeder]
+dev-apps0
+
+[balancers]
+#dev-bal0
+
+[crawlers]
+#dev-crwl0
+
+#
+# Web archive storage is accessed thru three NFSv3 HNAS servers with access to SAN GPFS storage.
+#
+
+[hnas1]
+
+[hnas2]
+
+[hnas3]
+
+[all:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file=~/.ssh/id_rsa

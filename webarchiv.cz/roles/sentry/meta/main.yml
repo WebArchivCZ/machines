@@ -1,0 +1,35 @@
+---
+dependencies:
+- role: postgresql
+  postgres_user: sentry
+  postgres_pass: sentry
+  postgres_dbs: sentry
+
+- role: nginx
+- role: supervisord
+
+  supervisord_apps:  
+  - name: sentry-web
+    user: nginx
+    command: "{{ sentry_virtualenv_dir }}/bin/sentry start"
+    environment: "SENTRY_CONF=/etc/sentry"
+    autostart: true
+    autorestart: true
+    redirect_err: true
+
+  - name: sentry-worker
+    user: nginx
+    command: "{{ sentry_virtualenv_dir }}/bin/sentry run worker"
+    environment: SENTRY_CONF="/etc/sentry"
+    autostart: true
+    autorestart: true
+    redirect_err: true
+
+  - name: sentry-cron
+    user: nginx
+    command: "{{ sentry_virtualenv_dir }}/bin/sentry run cron"
+    environment: SENTRY_CONF="/etc/sentry"
+    autostart: true
+    autorestart: true
+    redirect_err: true
+...

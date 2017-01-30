@@ -1,0 +1,27 @@
+---
+- name: directory for Openwayback {{ openwayback_version }} exists
+  file:
+    state: directory
+    path: '{{ openwayback_path }}'
+    owner: '{{ openwayback_user }}'
+    group: '{{ openwayback_group }}'
+
+- name: Get MD5 for Openwayback {{ openwayback_version }}
+  set_fact:
+    openwayback_md5: '{{ item }}'
+  with_url: 'https://repo1.maven.org/maven2/org/netpreserve/openwayback/openwayback-dist/{{ openwayback_version }}/openwayback-dist-{{ openwayback_version }}.tar.gz.md5'
+
+- name: Download Openwayback {{ openwayback_version }}
+  get_url:
+    url: 'http://search.maven.org/remotecontent?filepath=org/netpreserve/openwayback/openwayback-dist/{{ openwayback_version }}/openwayback-dist-{{ openwayback_version }}.tar.gz'
+    checksum: 'md5: {{ openwayback_md5 }}'
+    dest: '/tmp/openwayback-dist-{{ openwayback_version }}.tar.gz'
+
+- name: Extract Openwayback {{ openwayback_version }}
+  unarchive:
+    src: '/tmp/openwayback-dist-{{ openwayback_version }}.tar.gz'
+    copy: no
+    dest: '{{ openwayback_path }}'
+    owner: '{{ openwayback_user }}'
+    group: '{{ openwayback_group }}'
+    creates: '{{ openwayback_path }}/openwayback-openwayback-{{ openwayback_version }}/README.md'

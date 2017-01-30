@@ -1,0 +1,4 @@
+- hosts: development
+
+  roles:
+    - { name: archive-sample, wasample_dir: /mnt/archives }

@@ -1,0 +1,30 @@
+---
+admins:
+  - name: rudolf
+    comment: Rudolf Kreibich
+    groups: wheel,users
+    password: '{{ rudolf.password }}'
+    public_keys: '{{ rudolf.public_keys }}'
+
+  - name: jarda
+    comment: Jaroslav Kvasnica
+    groups: wheel,users
+    password: '{{ jarda.password }}'
+    public_keys: '{{ jarda.public_keys }}'
+
+heritrix_www_user: '{{ vault_heritrix_www_user }}'
+heritrix_www_password: '{{ vault_heritrix_www_password }}'
+heritrix_home: /opt/heritrix/running
+
+hnas_archives:
+- { hnas_path: '/webarchiv/archive05', archive: '/mnt/archives/05', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive06', archive: '/mnt/archives/06', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive07', archive: '/mnt/archives/07', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive08', archive: '/mnt/archives/08', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive09', archive: '/mnt/archives/09', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive10', archive: '/mnt/archives/10', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive11', archive: '/mnt/archives/11', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive12', archive: '/mnt/archives/12', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive13', archive: '/mnt/archives/13', opts: 'defaults,ro' }
+- { hnas_path: '/webarchiv/archive14', archive: '/mnt/archives/14', opts: 'defaults,rw' }
+...

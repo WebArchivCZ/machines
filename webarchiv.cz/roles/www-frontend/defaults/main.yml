@@ -1,0 +1,6 @@
+---
+# defaults file for www-frontend
+www_contact: 'root@localhost'
+www_frontend: '{{ ansible_hostname }}'
+www_backend: '192.168.60.21'
+...

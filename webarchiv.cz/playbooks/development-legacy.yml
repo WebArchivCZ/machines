@@ -1,0 +1,30 @@
+---
+- hosts: all
+  tasks:
+  - group_by: key='{{ ansible_distribution }}'
+  roles:
+  - common
+
+- hosts: vagrant00
+  roles:
+  - { role: 'wayback-frontend', wayback_contact: 'rudolf.kreibich@nkp.cz', wayback_backend: '192.168.60.21:8080' }
+  - { role: 'www-frontend', www_contact: 'rudolf.kreibich@nkp.cz', www_backend: '192.168.60.21' }
+#  - sentry
+#  - mysql-wadmin # comment it if you do not want to run legacy_sync
+#  - wa-kat
+#  - seeder
+
+- hosts: vagrant01
+  roles:
+  - { role: "wayback",  openwayback_version: "2.3.1", openwayback_collection: "cdx", openwayback_resource: "CDX", openwayback_host: vagrant01.webarchiv.cz }
+  - { role: "WA-sample", wasample_group: "tomcat" }
+  - www
+  vars:
+    openwayback_archives:
+    - { name: 'sample', path: '/mnt/archive', recurse: true }
+    - { name: 'testCrawls', path: '/mnt/har-testCrawls/', recurse: false }
+    - { name: 'testCrawls-12', path: '/mnt/12-testCrawls/', recurse: false }
+    - { name: 'testCrawls-12-2013', path: '/mnt/12-2013-testCrawls/', recurse: false }
+    - { name: 'topics2013', path: '/mnt/2013-topics/', recurse: true }
+    - { name: 'topics2014', path: '/mnt/14/topics/', recurse: true }
+    - { name: 'topics2015', path: '/mnt/14/2015/topics/', recurse: true }

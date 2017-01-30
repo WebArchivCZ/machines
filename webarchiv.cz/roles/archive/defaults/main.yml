@@ -1,0 +1,4 @@
+---
+# defaults file for archive
+archive_user: heritrix
+archive_group: users

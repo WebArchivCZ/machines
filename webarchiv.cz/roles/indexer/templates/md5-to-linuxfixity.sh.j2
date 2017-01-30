@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Introduction if no argument is provided
+if [[ $# -eq 0 ]] ; then
+    printf "Script looks for new files, create md5 for them and write result into linuxfixity in directory provided by argument.\nExamplary usage: ./md5-monitor.sh /mnt/archives/14/2016\n"
+    exit 1
+fi
+
+# Argument should be existing directory.
+if [ ! -d $1 ]; then
+  echo "Argument must be existing directory."
+  exit 1
+fi
+
+# All files will be relative to directory provided from argument
+root="$1"
+cd "$root"
+
+# We should create linuxfixity if it does not exists
+if [ ! -f linuxfixity ]; then
+        touch linuxfixity
+fi
+
+# Argument $1 is from find call, not from command-line argument.
+process_file () {
+
+  # We do not care about warc.gz.open, arc.gz.open, and linuxfixity files.
+  if ! [[ "$1" =~ (.*\.warc\.gz\.open$|.*\.arc\.gz\.open$|^\./linuxfixity$) ]]; then
+
+    # If file is not in linuxfixity, we do md5sum and write result to linuxfixity
+    if ! grep -q "$1" linuxfixity; then
+      md5sum "$1" >> linuxfixity
+      echo $(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ") MD5 created: "$1"
+    fi
+
+  fi
+}
+
+export -f process_file
+
+# Action begins
+find . -type f -exec bash -c 'process_file "$0"' {}  \;

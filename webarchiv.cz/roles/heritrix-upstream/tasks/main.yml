@@ -1,0 +1,29 @@
+---
+# tasks file for heritrix
+
+- name: directory for Heritrix exists
+  file: 
+    state: directory
+    path: '{{ heritrix_path }}'
+    owner: '{{ heritrix_user }}'
+    group: '{{ heritrix_group }}'
+
+- name: Get MD5 for Heritrix {{ heritrix_version }}
+  set_fact:
+    heritrix_md5: '{{ item }}'
+  with_url: 'http://builds.archive.org/maven2/org/archive/heritrix/heritrix/{{ heritrix_version }}/heritrix-{{ heritrix_version }}-dist.tar.gz.md5'
+
+- name: Download Heritrix {{ heritrix_version }}
+  get_url:
+      url: 'http://builds.archive.org/maven2/org/archive/heritrix/heritrix/{{ heritrix_version }}/heritrix-{{ heritrix_version }}-dist.tar.gz'
+      checksum: 'md5: {{ heritrix_md5 }}'
+      dest: '/tmp/heritrix-{{ heritrix_version }}-dist.tar.gz'
+
+- name: Extact Heritrix {{ heritrix_version }}
+  unarchive: 
+    src: '/tmp/heritrix-{{ heritrix_version }}-dist.tar.gz'
+    copy: no
+    dest: '{{ heritrix_path }}'
+    owner: '{{ heritrix_user }}'
+    group: '{{ heritrix_group }}'
+    creates: '{{ heritrix_home }}/bin/heritrix'

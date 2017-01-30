@@ -1,0 +1,9 @@
+[program:{{ CDXindexer.program }}]
+command={{ CDXindexer.command }}
+user={{ CDXindexer.user }}
+autostart={{ CDXindexer.autostart }}
+autorestart={{ CDXindexer.autorestart }}
+stdout_logfile={{ CDXindexer.stdout_logfile }}
+stderr_logfile={{ CDXindexer.stderr_logfile }}
+redirect_stderr={{ CDXindexer.redirect_err }}
+stopsignal=QUIT

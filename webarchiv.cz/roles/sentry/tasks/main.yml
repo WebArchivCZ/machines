@@ -1,0 +1,61 @@
+---
+- include: provision.yml
+
+- name: "sentry installed to {{ sentry_virtualenv_dir }}"
+  pip:
+    name: sentry
+    virtualenv: "{{ sentry_virtualenv_dir }}"
+    state: "latest"
+  tags: packages
+  notify: 
+  - set permissions
+
+- name: init sentry configration
+  shell: "{{ sentry_virtualenv_dir }}/bin/sentry init /etc/sentry"
+  tags: config
+  args:
+    creates: /etc/sentry/sentry.conf.py
+
+- name: configuration is present
+  template: src="{{ item.src }}" dest="{{ item.dest }}"
+  with_items:
+    - { src: "sentry.conf.py.j2", dest: "/etc/sentry/sentry.conf.py" }
+    - { src: "config.yml.j2", dest: "/etc/sentry/config.yml" }
+    - { src: "nginx-sentry.conf.j2", dest: "/etc/nginx/conf.d/sentry.conf" }
+  tags: config
+  notify: reload nginx
+
+- name: set permissions
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    mode: "g+w"
+    owner: nginx
+    group: nginx
+  with_items:
+  - "{{ sentry_virtualenv_dir }}"
+  tags: permissions
+
+# SERVICES
+- name: services are running event after boot
+  service: 
+    name: "{{ item }}"
+    state: running
+    enabled: yes
+  with_items:
+  - redis
+  - postgresql
+  - supervisord
+
+# SELinux
+- name: SELinux for nginx
+  seboolean:
+    name: httpd_can_network_connect
+    persistent: yes
+    state: yes
+
+# SENTRY DB
+- name: db tables are ready
+  shell: "{{ sentry_virtualenv_dir}}/bin/sentry --config /etc/sentry/ upgrade --noinput"
+  tags: db

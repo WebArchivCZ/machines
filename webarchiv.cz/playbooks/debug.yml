@@ -1,0 +1,9 @@
+- name: Gather facts
+  hosts: vcenter
+#  connection: local
+#  become: false
+
+  tasks:
+  - name: Test vars
+    debug:
+      var: vmware_name

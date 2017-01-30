@@ -1,0 +1,70 @@
+---
+- name: EPEL repository installed
+  yum: name="epel-release"
+  tags: packages
+
+- name: YUM requirements
+  yum: name="{{ item }}"
+  with_items:
+  - python-virtualenv # Seeder
+  - python-devel # Seeder: psycopg2
+  - postgresql-devel # Seeder: psycopg2
+  - python-psycopg2 # Seeder
+  - mysql-devel # Seeder: psycopg2
+  - libjpeg-turbo-devel # Seeder: Pillow
+  - zlib-devel # Seeder: Pillow
+  - gcc # Seeder: Pillow
+  - libfonts # Manet: Phantom.js dependency
+  - uwsgi 
+  - uwsgi-plugin-python
+  - uwsgi-plugin-python3
+  - python34
+  - python34-devel
+  - python-pip
+  - memcached
+  - policycoreutils-python # SELinux module for Ansible
+  tags: packages
+
+- name: virtualenv upgraded to latest
+  pip:
+    name: "virtualenv"
+    state: "latest"
+  tags: packages
+
+- name: requirements.txt satisfied in virtualenv {{ seeder_virtualenv }}
+  pip:
+    requirements: "{{ seeder_home }}/{{ item }}"
+    virtualenv: "{{ seeder_virtualenv }}"
+    state: "latest"
+    virtualenv_python: "python3.4"
+  with_items:
+  - "requirements.txt"
+#  - "requirements_dev.txt"
+  tags: packages
+
+- name: seeder longs for mysqlclient too
+  pip:
+    name: "{{ item }}"
+    virtualenv: "{{ seeder_virtualenv }}"
+    state: "latest"
+    virtualenv_python: "python3.4"
+  with_items:
+  - "mysqlclient"
+  tags: packages
+
+# There is bug in Ansible now
+#- name: seeder wants analysis-icu plugin for elasticsearch
+#  elasticsearch_plugin: 
+#    name: "analysis-icu"
+#    state: "present"
+#  tags: elastic
+#  notify: restart elasticsearch
+#
+# WORKAROUND
+#
+- name: seeder wants analysis-icu plugin for elasticsearch
+  shell: /usr/share/elasticsearch/bin/plugin install analysis-icu
+         creates="/usr/share/elasticsearch/plugins/analysis-icu/plugin-descriptor.properties"
+  tags: elastic
+  notify: restart elasticsearch
+...

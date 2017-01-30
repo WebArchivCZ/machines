@@ -1,0 +1,5 @@
+---
+- hosts: crawlers
+
+  roles:
+  - heritrix-upstream

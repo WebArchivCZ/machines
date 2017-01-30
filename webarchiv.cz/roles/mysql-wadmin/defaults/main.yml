@@ -1,0 +1,7 @@
+---
+wadmin_db: wadmin
+wadmin_sql: wadmin-redacted.sql.gz
+wadmin_db_user: wadmin
+wadmin_db_pass: wadmin
+wadmin_db_host: 127.0.0.1
+...

@@ -1,0 +1,41 @@
+---
+- name: EPEL repo is installed
+  yum: name="epel-release"
+
+- name: Dependencies are met
+  yum: name="{{ item }}"
+  with_items:
+  - python-pip
+  - python-devel
+  - gcc
+
+- name: pip self update to latest
+  pip:
+    name: pip 
+    state: latest
+
+- name: pip installs wa-kat
+  pip: name="wa-kat" state="latest"
+
+- name: init corpus of text tokenizer
+  shell: "python -m textblob.download_corpora" 
+  args:
+    creates: "{{ wa_kat_corpus_path}}/corpora/movie_reviews/README"
+  environment: 
+    NTLK_DATA: '{{ wa_kat_corpus_path }}'
+  tags: wa-kat
+
+#- name: wa-kat deployed into supervisord
+#  template: src="templates/supervisord_wa-kat.ini.j2" dest="/etc/supervisord.d/wa-kat.ini"
+#  tags: wa-kat
+#  notify: restart supervisord
+
+- name: wa-kat setting deploy at '{{ wa_kat_settings_dir }}'
+  template: src="templates/wa_kat.json.j2" dest='{{ wa_kat_settings_dir }}/wa_kat.json'
+  tags: wa-kat
+  notify: restart supervisord
+
+#- name: zeo database for wa-kat setting deployed into supervisord
+#  template: src="templates/supervisord_zeo.ini.j2" dest="/etc/supervisord.d/zeo.ini"
+#  tags: wa-kat
+#  notify: restart supervisord

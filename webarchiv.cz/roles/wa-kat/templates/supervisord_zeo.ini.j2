@@ -1,0 +1,5 @@
+[program:runzeo]
+command=sh -c 'runzeo -C $(python -c "from wa_kat.settings import *; print ZEO_SERVER_PATH")'
+autostart=true
+user={{ seeder_user }}
+redirect_stderr=true

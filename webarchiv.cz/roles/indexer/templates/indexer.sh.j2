@@ -1,0 +1,31 @@
+#!/bin/bash
+# usage ./indexer.sh /mnt/archives/14/2016/2016.md5
+# Script which parses md5 file specified in argument for warc.gz files to index
+# it creates *.warc.gz/logs/cdx hiearchy
+
+# binary for indexer tool
+CreateCDX='{{ openwayback_path }}/openwayback/bin/cdx-indexer'
+# relative paths should align in working directory
+cd $(dirname $1)
+
+while read line; do
+        filepath=${line:34} # To get full path, we remove first 34 chars as path starts at position 35
+        path=$(dirname $filepath)
+        file=$(basename $filepath)
+
+	if [[ "$file" =~ (.*\.warc\.gz$|.*\.arc\.gz$) ]]; then # This should apply to all files ending with arc.gz and warc.gz.
+
+		# Create logs/cdx directory if it does not already exist
+                if [ ! -d $path/logs/cdx ]; then
+			echo creating: $path/logs/cdx
+        		mkdir -p $path/logs/cdx
+		fi
+
+		# If logs/cdx/*arc.gz.cdx does not already exist, create it using cdx indexer
+		if [ ! -f $path/logs/cdx/$file.cdx ]; then
+			echo indexing $file to $path/logs/cdx/$file.cdx
+			$CreateCDX $filepath $path/logs/cdx/$file.cdx
+		fi
+	fi
+
+done < $1

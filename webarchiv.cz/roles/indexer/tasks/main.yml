@@ -1,0 +1,25 @@
+---
+- name: Directory structure exists
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: '{{ item.owner | default(omit) }}'
+    group: '{{ item.group | default(omit) }}'
+  with_items:
+  - { path: /opt/scripts }
+  - { path: /var/log/cdx-indexer, owner: '{{ archive_user }}', group: '{{ archive_group }}' }
+  tags: indexer
+
+- name: Deploy templates
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+    owner: '{{ item.owner | default(omit) }}'
+    group: '{{ item.group | default(omit) }}'
+    mode: '{{ item.mode | default(omit) }}'
+  with_items:
+  - { src: indexer.sh.j2, dest: /opt/scripts/indexer.sh, owner: '{{ archive_user }}', group: '{{ archive_group }}', mode: 'u+x' }
+  - { src: md5-to-linuxfixity.sh.j2, dest: /opt/scripts/md5-to-linuxfixity.sh, owner: '{{ archive_user }}', group: '{{ archive_group }}', mode: 'u+x' }
+  - { src: cdx-indexer-supervisord.ini.j2, dest: /etc/supervisord.d/cdx-indexer.ini } #notify: restart supervisord }
+  notify: restart supervisor
+  tags: indexer

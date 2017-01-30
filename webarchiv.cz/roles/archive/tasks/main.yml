@@ -1,0 +1,21 @@
+---
+# tasks file for archive
+
+- name: 'dirs for archive mount exists'
+  file:
+    path: '{{ item.archive }}'
+    state: directory
+    owner: '{{ archive_user }}'
+    group: '{{ archive_group }}'
+  with_items: '{{ hnas_archives }}'
+  ignore_errors: yes
+
+- name: 'mount archives'
+  mount:
+    name: '{{ item.archive }}'
+    state: mounted
+    fstype: nfs
+    opts: '{{ item.opts }}'
+    src: '{{ hnas }}:{{ item.hnas_path }}'
+  with_items: '{{ hnas_archives }}'
+...

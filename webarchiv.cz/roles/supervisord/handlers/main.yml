@@ -1,0 +1,12 @@
+---
+# handlers file for roles/supervisord
+
+- name: start supervisor
+  service:
+    name: supervisord
+    state: started
+
+- name: restart supervisor
+  service:
+    name: supervisord
+    state: restarted
