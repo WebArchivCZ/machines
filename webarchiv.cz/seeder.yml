@@ -1,7 +1,6 @@
 ---
 - hosts: seeder
   roles:
-  - sentry
-  - mysql-wadmin # comment it if you do not want to run legacy_sync
+  - { role: mysql-wadmin, tags: wadmin } # comment it if you do not want to run legacy_sync
   - wa-kat
-  - seeder
+  - { role: seeder, tags: seeder }
