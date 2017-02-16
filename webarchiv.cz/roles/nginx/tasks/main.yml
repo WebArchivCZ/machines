@@ -19,10 +19,10 @@
   #  tags: nginx
   #  when: admins is defined
 
-- name: Self-signed certificate ready
+- name: Self-signed certificate ready for {{ ansible_nodename }}
   command: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=CZ/ST=Prague/L=Klementinum/O=NLCR/CN=rudolf.kreibich@nkp.cz" -keyout /etc/nginx/nginx-{{ ansible_nodename }}.key -out /etc/nginx/nginx-{{ ansible_nodename }}.crt'
   args:
-    creates: '/etc/nginx/nginx.crt'
+    creates: '/etc/nginx/nginx-{{ ansible_nodename }}.crt'
   notify: reload nginx
   tags: nginx
 
