@@ -19,7 +19,7 @@
 - name: Self-signed certificate ready
   command: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=CZ/ST=Prague/L=Klementinum/O=NLCR/CN=rudolf.kreibich@nkp.cz" -keyout /etc/nginx/nginx-{{ sentry_hostname }}.key -out /etc/nginx/nginx-{{ sentry_hostname }}.crt'
   args:
-    creates: '/etc/nginx/nginx.crt'
+    creates: '/etc/nginx/nginx-{{ sentry_hostname }}.crt'
   notify: reload nginx
   tags: nginx
 
