@@ -20,7 +20,7 @@
   #  when: admins is defined
 
 - name: Self-signed certificate ready
-  command: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=CZ/ST=Prague/L=Klementinum/O=NLCR/CN=rudolf.kreibich@nkp.cz" -keyout /etc/nginx/nginx-{{ ansible_fqdn }}.key -out /etc/nginx/nginx-{{ ansible_fqdn }}.crt'
+  command: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=CZ/ST=Prague/L=Klementinum/O=NLCR/CN=rudolf.kreibich@nkp.cz" -keyout /etc/nginx/nginx-{{ ansible_nodename }}.key -out /etc/nginx/nginx-{{ ansible_nodename }}.crt'
   args:
     creates: '/etc/nginx/nginx.crt'
   notify: reload nginx
@@ -39,6 +39,6 @@
   service: 
     name: nginx
     enabled: yes
-    state: running
+  notify: start nginx
   tags: nginx
 ...

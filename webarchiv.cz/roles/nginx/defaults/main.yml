@@ -1,3 +1,3 @@
 ---
-nginx_hostname: "{{ ansible_fqdn }}"
+nginx_hostname: "{{ ansible_nodename }}"
 ...
